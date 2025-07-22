@@ -1,0 +1,28 @@
+package com.github.mayconr.juoserver.game.core.session;
+
+import com.github.mayconr.juoserver.game.core.model.Location;
+import com.github.mayconr.juoserver.game.core.model.UOItem;
+import com.github.mayconr.juoserver.game.core.model.UOMobile;
+import com.github.mayconr.juoserver.game.core.model.UOPlayer;
+import com.github.mayconr.juoserver.game.core.session.npc.NpcSession;
+import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
+import io.netty.channel.ChannelHandlerContext;
+
+public interface GameSession {
+
+    void sendSystemMessage(String message);
+
+    PlayerSession getPlayerSession(UOMobile mobile);
+
+    NpcSession createNpcSession(int npcId, Location location);
+
+    PlayerSession createPlayerSession(UOPlayer player, ChannelHandlerContext ctx);
+
+    UOItem createItemAtLocation(int itemId, Location location);
+    UOItem createItemAtLocation(String name, Location location);
+
+    void deleteItem(UOItem item);
+
+    void moveItem(UOItem item, Location location);
+
+}

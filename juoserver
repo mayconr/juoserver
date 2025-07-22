@@ -1,5 +1,0 @@
-#!/bin/sh
-mvn -q -e exec:java -Dexec.mainClass=net.sf.juoserver.main.Main -Dexec.args="$*"
-RESULT=$?
-
-exit $RESULT
