@@ -1,10 +1,11 @@
 package com.github.mayconr.juoserver.game.core.ai;
 
-import com.github.mayconr.juoserver.game.core.event.EventBus;
+import com.github.mayconr.juoserver.game.core.gameloop.GameTask;
+import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.core.session.npc.NpcSession;
 
-public interface NpcAI {
+public interface NpcAI extends GameTask {
 
-    void initialize(NpcSession npcSession, EventBus eventBus);
+    void initialize(GameSession gameSession, NpcSession npcSession);
 
 }

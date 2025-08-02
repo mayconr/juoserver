@@ -1,4 +1,4 @@
-package com.github.mayconr.juoserver.game.packet;
+package com.github.mayconr.juoserver.game.core.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

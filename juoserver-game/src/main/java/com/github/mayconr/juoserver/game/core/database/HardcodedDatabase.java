@@ -43,6 +43,11 @@ public class HardcodedDatabase implements Database {
         ACCOUNTS.add(user);
 
         final var legolaz = new UOPlayer(MOBILE_COUNTER.getAndIncrement(), 0x190, 2514,550,0, "Legolaz", Direction.NORTH,0x83EA,CharacterStatus.NORMAL,Notoriety.CRIMINAL,user.getId(),"admin");
+        legolaz.setStrength(10);
+        legolaz.setDexterity(20);
+        legolaz.setMana(11);
+        legolaz.setStamina(100);
+        legolaz.setMaxStamina(120);
         final var backpack = new UOContainer(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemById(4).orElseThrow(), new PointInTheWorld(0,0,0));
         legolaz.setBackpack(backpack);
         equipItem(legolaz, Layer.OUTER_TORSO, "robe");

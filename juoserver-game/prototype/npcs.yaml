@@ -8,11 +8,14 @@
 - npcId: 2
   type: HUMAN
   modelId: 0x190
+  ai: BANKER2
   name: Banker
   notoriety: INNOCENT
   hue: 0x83EA
   speechFont: 3
   speechHue: 690
+  race: ELF
+  gender: FEMALE
   equippedItems:
     HEAD: hat
     OUTER_TORSO: robe

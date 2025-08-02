@@ -1,6 +1,7 @@
 package com.github.mayconr.juoserver.game.server;
 
 import com.github.mayconr.juoserver.game.packet.*;
+import com.github.mayconr.juoserver.game.packet.RequestWarMode;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -35,6 +36,9 @@ public class UOProtocolDecoder extends ByteToMessageDecoder {
         packetsClass.put(DropItem.CODE, DropItem.class);
         packetsClass.put(EquipItem.CODE, EquipItem.class);
         packetsClass.put(Target.CODE, Target.class);
+        packetsClass.put(GetPlayerStatus.CODE, GetPlayerStatus.class);
+        packetsClass.put(RequestHelp.CODE, RequestHelp.class);
+        packetsClass.put(RequestWarMode.CODE, RequestWarMode.class);
     }
 
     @Override

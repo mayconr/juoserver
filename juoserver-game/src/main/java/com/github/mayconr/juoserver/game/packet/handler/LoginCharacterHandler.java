@@ -1,6 +1,6 @@
 package com.github.mayconr.juoserver.game.packet.handler;
 
-import com.github.mayconr.juoserver.game.core.session.GameSession;
+import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.packet.ClientVersion;
 import com.github.mayconr.juoserver.game.packet.LoginCharacter;
 import com.github.mayconr.juoserver.game.packet.LoginReject;

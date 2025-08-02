@@ -25,6 +25,7 @@ class InitializationService {
         ctx.write(new SeasonalInformation(Season.Summer, true));
         ctx.write(new DrawGamePlayer(mobile));
         ctx.write(new DrawObject(mobile));
+        ctx.write(new StatusBarInfo(mobile));
         ctx.write(new LoginComplete());
         database.getMobilesInRange(mobile, MobileFilter.ALL_VISIBLE)
                 .filter(someone->!someone.equals(mobile)) // avoid unnecessary packet

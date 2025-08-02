@@ -2,8 +2,8 @@ package com.github.mayconr.juoserver.game;
 
 import com.github.mayconr.juoserver.game.core.event.*;
 import com.github.mayconr.juoserver.game.core.model.PointInTheWorld;
-import com.github.mayconr.juoserver.game.core.session.GameSession;
-import com.github.mayconr.juoserver.game.packet.CursorType;
+import com.github.mayconr.juoserver.game.core.session.game.GameSession;
+import com.github.mayconr.juoserver.game.core.model.CursorType;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class Teste {
         eventBus.register(MobileSpeech.class, this::speech);
         eventBus.register(Prompt.class, this::createNpc, prompt -> prompt.name().equalsIgnoreCase("createnpc"));
         eventBus.register(Prompt.class, this::createItem, prompt -> prompt.name().equalsIgnoreCase("createitem"));
-        eventBus.register(Prompt.class, this::move, prompt -> prompt.name().equalsIgnoreCase("irla"));
+        eventBus.register(Prompt.class, this::move, prompt -> prompt.name().equalsIgnoreCase("goto"));
         eventBus.register(Prompt.class, this::where, prompt -> prompt.name().equalsIgnoreCase("where"));
         eventBus.register(Prompt.class, this::select, prompt -> prompt.name().equalsIgnoreCase("target"));
         eventBus.register(SelectedObject.class, this::objectSelected);
@@ -75,5 +75,9 @@ public class Teste {
     public HandlerResult staticSelected(SelectedStatics statics) {
         System.out.println("Selecinou statics "+statics);
         return HandlerResult.CONTINUE;
+    }
+
+    public void updateStatus(Prompt prompt) {
+
     }
 }

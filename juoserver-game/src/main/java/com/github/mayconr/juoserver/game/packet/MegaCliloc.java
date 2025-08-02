@@ -1,5 +1,6 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import com.github.mayconr.juoserver.game.core.model.Clilocs;
 import com.github.mayconr.juoserver.game.core.model.UOObject;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
 import io.netty.buffer.ByteBuf;

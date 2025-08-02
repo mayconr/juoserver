@@ -1,9 +1,10 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import com.github.mayconr.juoserver.game.core.model.CursorTarget;
+import com.github.mayconr.juoserver.game.core.model.CursorType;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Arrays;

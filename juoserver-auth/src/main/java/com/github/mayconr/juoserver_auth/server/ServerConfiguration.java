@@ -5,6 +5,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
 
@@ -24,17 +25,19 @@ public class ServerConfiguration {
         return new UOChannelInitializer(connectionLoggingHandler, packetHandlers);
     }
 
+    @Qualifier("parent")
     @Bean
     public NioEventLoopGroup parentNioEventLoopGroup() {
         return new NioEventLoopGroup(1);
     }
 
+    @Qualifier("child")
     @Bean
     public NioEventLoopGroup childNioEventLoopGroup() {
         return new NioEventLoopGroup(1);
     }
     @Bean
-    public ServerBootstrap serverBootstrap(UOChannelInitializer channelInitializer, NioEventLoopGroup parentNioEventLoopGroup, NioEventLoopGroup childNioEventLoopGroup) {
+    public ServerBootstrap serverBootstrap(UOChannelInitializer channelInitializer, @Qualifier("parent") NioEventLoopGroup parentNioEventLoopGroup, @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup) {
         return new ServerBootstrap()
                 .group(parentNioEventLoopGroup, childNioEventLoopGroup)
                 .channel(NioServerSocketChannel.class)
@@ -44,7 +47,7 @@ public class ServerConfiguration {
     }
 
     @Bean
-    public ServerStartup serverStartup(ServerBootstrap serverBootstrap, NioEventLoopGroup parentNioEventLoopGroup, NioEventLoopGroup childNioEventLoopGroup) {
+    public ServerStartup serverStartup(ServerBootstrap serverBootstrap, @Qualifier("parent") NioEventLoopGroup parentNioEventLoopGroup, @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup) {
         return new ServerStartup(serverBootstrap, parentNioEventLoopGroup, childNioEventLoopGroup);
     }
 }

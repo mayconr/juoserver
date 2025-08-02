@@ -10,13 +10,15 @@ public class UONpc extends UOMobile {
     private final NpcType type;
     private int speechHue;
     private int speechFont;
-    private Class<? extends NpcAI> aiClass;
+    private String ai;
 
     public UONpc(int serialId, NpcPrototype prototype, Location location) {
-        super(serialId, prototype.getModelId(), location.getX(), location.getY(), location.getZ(), prototype.getName(), Direction.NORTH, prototype.getHue(), CharacterStatus.NORMAL, prototype.getNotoriety());
+        super(serialId, prototype.getModelId(), location.getX(), location.getY(), location.getZ(), prototype.getName(),
+                Direction.NORTH, prototype.getHue(), CharacterStatus.NORMAL, prototype.getNotoriety(), prototype.getRace(),
+                prototype.getGender());
         this.type = prototype.getType();
-        this.aiClass = BankerAI.class;
         this.speechHue = prototype.getSpeechHue();
         this.speechFont = prototype.getSpeechFont();
+        this.ai = prototype.getAi();
     }
 }

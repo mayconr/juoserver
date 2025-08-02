@@ -1,4 +1,4 @@
-package com.github.mayconr.juoserver.game.core.session;
+package com.github.mayconr.juoserver.game.core.session.game;
 
 import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.core.model.UOItem;
@@ -10,7 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 public interface GameSession {
 
-    void sendSystemMessage(String message);
+    void sendBroadcastMessage(String message);
 
     PlayerSession getPlayerSession(UOMobile mobile);
 

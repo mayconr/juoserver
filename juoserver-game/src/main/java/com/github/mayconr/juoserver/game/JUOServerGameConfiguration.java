@@ -1,15 +1,22 @@
 package com.github.mayconr.juoserver.game;
 
-import com.github.mayconr.juoserver.game.core.agent.AgentConfiguration;
+import com.github.mayconr.juoserver.game.core.ai.BankerAI;
+import com.github.mayconr.juoserver.game.core.ai.NpcAiRegistry;
+import com.github.mayconr.juoserver.game.core.ai.DefaultNpcAiRegistry;
 import com.github.mayconr.juoserver.game.core.ai.ollama.OllamaClientChatImpl;
 import com.github.mayconr.juoserver.game.core.ai.ollama.OllanaClient;
 import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.core.database.DatabaseConfiguration;
 import com.github.mayconr.juoserver.game.core.event.DefaultEventBus;
 import com.github.mayconr.juoserver.game.core.event.EventBus;
+import com.github.mayconr.juoserver.game.core.gameloop.DefaultGameLoop;
+import com.github.mayconr.juoserver.game.core.gameloop.GameLoop;
 import com.github.mayconr.juoserver.game.core.prototype.PrototypeConfiguration;
-import com.github.mayconr.juoserver.game.core.session.DefaultGameSession;
-import com.github.mayconr.juoserver.game.core.session.GameSession;
+import com.github.mayconr.juoserver.game.core.session.game.DefaultGameSession;
+import com.github.mayconr.juoserver.game.core.session.game.GameSession;
+import com.github.mayconr.juoserver.game.core.session.game.ItemService;
+import com.github.mayconr.juoserver.game.core.session.game.MessageService;
+import com.github.mayconr.juoserver.game.core.session.npc.NpcSessionFactory;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSessionFactory;
 import com.github.mayconr.juoserver.game.packet.handler.*;
 import com.github.mayconr.juoserver.game.server.ClientConnectedHandlerAdapter;
@@ -23,6 +30,7 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -33,7 +41,6 @@ import java.util.List;
 @Configuration
 @Import({
         DatabaseConfiguration.class,
-        AgentConfiguration.class,
         PrototypeConfiguration.class
 })
 public class JUOServerGameConfiguration {
@@ -51,18 +58,10 @@ public class JUOServerGameConfiguration {
     }
 
     @Bean
-    public ChannelGroup channelGroup() {
-        return new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    }
-
-    @Bean
-    public NioEventLoopGroup parentNioEventLoopGroup() {
-        return new NioEventLoopGroup(1);
-    }
-
-    @Bean
-    public NioEventLoopGroup childNioEventLoopGroup() {
-        return new NioEventLoopGroup(1);
+    public GameLoop gameLoop() {
+        final var gameloop = new DefaultGameLoop();
+        Runtime.getRuntime().addShutdownHook(new Thread(gameloop::stop));
+        return gameloop.start();
     }
 
     // ========= Session Factory / Core Game Session =========
@@ -71,20 +70,23 @@ public class JUOServerGameConfiguration {
     public PlayerSessionFactory playerSessionFactory(
             ChannelGroup channelGroup,
             EventBus eventBus,
-            Database database
+            Database database,
+            GameLoop gameLoop
     ) {
-        return new PlayerSessionFactory(channelGroup, eventBus, database);
+        return new PlayerSessionFactory(channelGroup, eventBus, database, gameLoop);
     }
 
     @Bean
     public GameSession gameSession(
             Database database,
             ChannelGroup channelGroup,
-            EventBus eventBus,
             PlayerSessionFactory playerSessionFactory,
-            OllanaClient ollanaClient
+            NpcSessionFactory npcSessionFactory,
+            EventBus eventBus
     ) {
-        return new DefaultGameSession(database, channelGroup, eventBus, playerSessionFactory, ollanaClient);
+        final var messageService = new MessageService(channelGroup);
+        final var itemService = new ItemService(database, channelGroup, eventBus);
+        return new DefaultGameSession(database, channelGroup, eventBus, playerSessionFactory, npcSessionFactory, messageService, itemService);
     }
 
     // ========= Packet Handlers =========
@@ -110,11 +112,30 @@ public class JUOServerGameConfiguration {
                 new PickUpItemHandler(),
                 new DropItemHandler(),
                 new WearItemHandler(),
-                new TargetHandler()
+                new TargetHandler(),
+                new GetPlayerStatusHandler(),
+                new RequestHelpHandler(),
+                new RequestWarModeHandler()
         );
     }
 
     // ========= Network =========
+    @Bean
+    public ChannelGroup channelGroup() {
+        return new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    }
+
+    @Qualifier("parent")
+    @Bean
+    public NioEventLoopGroup parentNioEventLoopGroup() {
+        return new NioEventLoopGroup(1);
+    }
+
+    @Qualifier("child")
+    @Bean
+    public NioEventLoopGroup childNioEventLoopGroup() {
+        return new NioEventLoopGroup(1);
+    }
 
     @Bean
     public ClientConnectedHandlerAdapter connectionLoggingHandler(ChannelGroup channelGroup) {
@@ -133,8 +154,8 @@ public class JUOServerGameConfiguration {
     @Bean
     public ServerBootstrap serverBootstrap(
             UOChannelInitializer channelInitializer,
-            NioEventLoopGroup parentNioEventLoopGroup,
-            NioEventLoopGroup childNioEventLoopGroup
+            @Qualifier("parent") NioEventLoopGroup parentNioEventLoopGroup,
+            @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup
     ) {
         return new ServerBootstrap()
                 .group(parentNioEventLoopGroup, childNioEventLoopGroup)
@@ -147,9 +168,25 @@ public class JUOServerGameConfiguration {
     @Bean
     public ServerStartup serverStartup(
             ServerBootstrap serverBootstrap,
-            NioEventLoopGroup parentNioEventLoopGroup,
-            NioEventLoopGroup childNioEventLoopGroup
+            @Qualifier("parent") NioEventLoopGroup parentNioEventLoopGroup,
+            @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup
     ) {
         return new ServerStartup(serverBootstrap, parentNioEventLoopGroup, childNioEventLoopGroup);
     }
+
+    // ========= AI =========
+
+    @Bean
+    public NpcAiRegistry npcAiRegistry(Database database, OllanaClient ollanaClient, EventBus eventBus) {
+        final var registry = new DefaultNpcAiRegistry();
+        registry.registerAI("BANKER", ()->new BankerAI(database, ollanaClient, eventBus));
+        return registry;
+    }
+
+    @Bean
+    public NpcSessionFactory npcSessionFactory(EventBus eventBus, ChannelGroup channelGroup, GameLoop gameLoop,
+                                               NpcAiRegistry aiRegistry) {
+        return new NpcSessionFactory(eventBus, channelGroup, gameLoop, aiRegistry);
+    }
+
 }

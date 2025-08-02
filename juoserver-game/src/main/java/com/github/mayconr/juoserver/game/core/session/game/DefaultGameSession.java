@@ -1,11 +1,14 @@
-package com.github.mayconr.juoserver.game.core.session;
+package com.github.mayconr.juoserver.game.core.session.game;
 
-import com.github.mayconr.juoserver.game.core.ai.ollama.OllanaClient;
 import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.core.event.EventBus;
+import com.github.mayconr.juoserver.game.core.event.NpcSessionCreated;
+import com.github.mayconr.juoserver.game.core.event.PlayerSessionClosed;
+import com.github.mayconr.juoserver.game.core.event.PlayerSessionCreated;
 import com.github.mayconr.juoserver.game.core.model.*;
-import com.github.mayconr.juoserver.game.core.session.npc.DefaultNpcSession;
 import com.github.mayconr.juoserver.game.core.session.npc.NpcSession;
+import com.github.mayconr.juoserver.game.core.session.npc.NpcSessionFactory;
+import com.github.mayconr.juoserver.game.core.session.player.DefaultPlayerSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSessionFactory;
 import com.github.mayconr.juoserver.game.packet.*;
@@ -25,79 +28,75 @@ public class DefaultGameSession implements GameSession {
     private final ChannelGroup channelGroup;
     private final EventBus eventBus;
     private final PlayerSessionFactory playerSessionFactory;
-    private final OllanaClient ollanaClient;
+    private final NpcSessionFactory npcSessionFactory;
     private final Map<UONpc, NpcSession> npcNpcSessionMap = new HashMap<>();
     private final Map<UOPlayer, PlayerSession> playerSessionMap = new HashMap<>();
 
+    // Services
+    private final MessageService messageService;
+    private final ItemService itemService;
+
     @Override
-    public void sendSystemMessage(String message) {
-        channelGroup.writeAndFlush(new SendSpeech(TextType.BROADCAST, 2046, 0, 0, 1, "System", message));
+    public void sendBroadcastMessage(String message) {
+        messageService.handleSendBreadcastMessage(message);
     }
 
     @Override
     public PlayerSession getPlayerSession(UOMobile mobile) {
-        return playerSessionMap.get(mobile);
+        if (mobile instanceof UOPlayer) {
+            return playerSessionMap.get(mobile);
+        }
+        throw new IllegalArgumentException("Mobile is not a player");
     }
 
     @Override
     public NpcSession createNpcSession(int npcId, Location location) {
         final var npc = database.createNpcAtLocation(npcId, location);
         try {
-            final var npcAI = npc.getAiClass().getConstructor(GameSession.class, Database.class, OllanaClient.class).newInstance(this, database, ollanaClient);
-            final var session = npcNpcSessionMap.putIfAbsent(npc, new DefaultNpcSession(npc, channelGroup, eventBus, npcAI));
+            final var session = npcNpcSessionMap.putIfAbsent(npc, npcSessionFactory.create(this, npc));
             channelGroup.writeAndFlush(new DrawObject(npc));
+            eventBus.publish(new NpcSessionCreated(session));
             return session;
         } catch (Exception e) {
-            throw new IllegalStateException("Unable to create AI for ["+npc.getAiClass()+"]", e);
+            throw new IllegalStateException("Unable to create AI for ["+npc.getAi()+"]", e);
         }
     }
 
     @Override
     public PlayerSession createPlayerSession(UOPlayer player, ChannelHandlerContext ctx) {
         return playerSessionMap.computeIfAbsent(player, pl -> {
-            pl.setConnected(true);
-
+            final var session = (DefaultPlayerSession) playerSessionFactory.createPlayerSession(pl, ctx);
             ctx.channel().closeFuture().addListener(future -> {
+                session.setActive(false);
                 playerSessionMap.remove(pl);
-                pl.setConnected(false);
+                eventBus.publish(new PlayerSessionClosed(session));
                 log.info("Session closed for mobile [{}-{}]", pl.getSerialId(), pl.getName());
             });
+            session.setActive(true);
 
-            return playerSessionFactory.createPlayerSession(pl, ctx);
+            eventBus.publish(new PlayerSessionCreated(session));
+
+            return session;
         });
     }
 
     @Override
     public UOItem createItemAtLocation(int itemId, Location location) {
-        final var item = database.createItemAtLocation(itemId, location);
-        updateItem(item, location);
-        return item;
+        return itemService.handleCreateItemAtLocation(itemId, location);
     }
 
     @Override
     public UOItem createItemAtLocation(String name, Location location) {
-        final var item = database.createItemAtLocation(name, location);
-        updateItem(item, location);
-        return item;
-    }
-
-    private void updateItem(UOItem item, Location location) {
-        channelGroup.write(new ObjectInfo(item));
-        channelGroup.write(new ObjectRevision(item));
-        channelGroup.flush();
-        if (log.isDebugEnabled())
-            log.debug("Item [{}] created a location [{},{},{}] with serialId [{}]", item, location.getX(), location.getY(), location.getZ(), item.getSerialId());
+        return itemService.handleCreateItemAtLocation(name, location);
     }
 
     @Override
     public void deleteItem(UOItem item) {
-        database.deleteItem(item);
-        channelGroup.writeAndFlush(new DeleteObject(item)); // TODO filter by range
+        itemService.handleDeleteItem(item);
     }
 
     @Override
     public void moveItem(UOItem item, Location location) {
-        item.setLocation(location);
-        channelGroup.writeAndFlush(new ObjectInfo(item));
+        itemService.handleMoveItem(item, location);
     }
 }

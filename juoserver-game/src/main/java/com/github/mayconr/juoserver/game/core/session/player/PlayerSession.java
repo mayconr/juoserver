@@ -1,6 +1,7 @@
 package com.github.mayconr.juoserver.game.core.session.player;
 
 import com.github.mayconr.juoserver.game.core.model.Container;
+import com.github.mayconr.juoserver.game.core.model.CursorType;
 import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.packet.*;
@@ -9,7 +10,9 @@ import java.util.List;
 
 public interface PlayerSession {
 
-    UOMobile getMobile();
+    UOMobile getPlayer();
+
+    boolean isActive();
 
     void initialize(String clientVersion);
 

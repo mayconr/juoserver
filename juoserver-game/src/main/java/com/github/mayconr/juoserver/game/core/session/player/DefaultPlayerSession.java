@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefaultPlayerSession implements PlayerSession {
 
-    private final UOMobile mobile;
+    private final UOPlayer player;
     private final InitializationService initializationService;
     private final SpeechService speechService;
     private final MovementService movementService;
@@ -20,12 +20,22 @@ public class DefaultPlayerSession implements PlayerSession {
     private final MegaClilocService megaClilocService;
     private final TargetService targetService;
 
+    private boolean active;
     private String clientVersion;
 
 
+    public UOMobile getPlayer() {
+        return player;
+    }
+
     @Override
-    public UOMobile getMobile() {
-        return mobile;
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        player.setConnected(active);
+        this.active = active;
     }
 
     @Override

@@ -5,27 +5,26 @@ import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.core.event.EventBus;
 import com.github.mayconr.juoserver.game.core.event.HandlerResult;
 import com.github.mayconr.juoserver.game.core.event.MobileSpeech;
+import com.github.mayconr.juoserver.game.core.gameloop.IntervalGameTask;
 import com.github.mayconr.juoserver.game.core.model.Container;
-import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.UOContainer;
 import com.github.mayconr.juoserver.game.core.model.UOPlayer;
-import com.github.mayconr.juoserver.game.core.session.GameSession;
+import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.core.session.npc.NpcSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@RequiredArgsConstructor
-public class BankerAI implements NpcAI {
+public class BankerAI extends IntervalGameTask implements NpcAI {
 
     private static final String VAULT_ATTRIBUTE = "VAULT";
-    private final GameSession gameSession;
     private final Database database;
     private final OllanaClient ollanaClient;
+    private final EventBus eventBus;
+    private GameSession gameSession;
     private NpcSession npcSession;
 
     private static final List<OllanaClient.Message> OLLAMA_CONTEXT = List.of(new OllanaClient.Message("system", "You are a banker in the town of Minoc, in the world of Ultima Online. Your duty is to securely guard the belongings and gold of the citizens. You speak in a polite and medieval manner, like a true NPC. Avoid any mention of the modern world, technology, or artificial intelligence. Only respond based on the universe of Ultima Online, and always be ready to open the bank when the client says \"bank\". You respect Lord British and follow the Virtues of Honor and Honesty."),
@@ -39,12 +38,25 @@ public class BankerAI implements NpcAI {
             new OllanaClient.Message("system", "you never ask for credentials"),
             new OllanaClient.Message("system", "Always respond with a maximum of 6 tokens. The answer must be short and objective."));
 
+    public BankerAI(Database database, OllanaClient ollanaClient, EventBus eventBus) {
+        super(10);
+        this.database = database;
+        this.ollanaClient = ollanaClient;
+        this.eventBus = eventBus;
+    }
+
     @Override
-    public void initialize(NpcSession session, EventBus eventBus) {
+    public void initialize(GameSession gameSession, NpcSession session) {
+        this.gameSession = gameSession;
         this.npcSession = session;
-        eventBus.register(MobileSpeech.class, this::onMobileSpeech);
+        //eventBus.register(MobileSpeech.class, this::onMobileSpeech);
         log.info("AI initialized for NPC "+session.getNpc().getName());
         //sk-ee998c407c534c54acac93a2858cba2d
+    }
+
+    @Override
+    public void execute() {
+        //this.npcSession.move(Direction.NORTH);
     }
 
     public HandlerResult onMobileSpeech(MobileSpeech speech) {
