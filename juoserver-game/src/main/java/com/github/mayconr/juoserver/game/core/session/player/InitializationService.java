@@ -23,13 +23,15 @@ class InitializationService {
     public void initialize(PlayerSession session, String clientVersion) {
         ctx.write(new LoginConfirm(mobile, 7168, 4096));
         ctx.write(new SeasonalInformation(Season.Summer, true));
+        database.getMobilesInRange(mobile, MobileFilter.ALL_VISIBLE)
+                .filter(someone->!someone.equals(mobile)) // avoid unnecessary packet
+                .forEach(someone->ctx.write(new DrawObject(someone)));
+        database.getItemsInRange(mobile)
+                .forEach(item->ctx.write(new ObjectInfo(item)));
         ctx.write(new DrawGamePlayer(mobile));
         ctx.write(new DrawObject(mobile));
         ctx.write(new StatusBarInfo(mobile));
         ctx.write(new LoginComplete());
-        database.getMobilesInRange(mobile, MobileFilter.ALL_VISIBLE)
-                .filter(someone->!someone.equals(mobile)) // avoid unnecessary packet
-                .forEach(someone->ctx.write(new DrawObject(someone)));
         ctx.flush();
 
         channelGroup.writeAndFlush(new DrawObject(mobile), channel -> !channel.equals(ctx.channel()));

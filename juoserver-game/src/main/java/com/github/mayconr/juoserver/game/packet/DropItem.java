@@ -1,5 +1,6 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
@@ -7,15 +8,15 @@ import lombok.ToString;
 
 @ToString
 @Getter
-public class DropItem extends AbstractPacket {
+public class DropItem extends AbstractPacket implements Location {
 
     public static final int CODE = (byte) 0x08;
-    private int serialId;
-    private int x;
-    private int y;
-    private int z;
-    private int containerGridIndex;
-    private int containerSerialId;
+    private final int serialId;
+    private final int x;
+    private final int y;
+    private final int z;
+    private final int containerGridIndex;
+    private final int containerSerialId;
 
     public DropItem(ByteBuf buf) {
         super(CODE, 15);

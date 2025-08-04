@@ -6,10 +6,7 @@ import com.github.mayconr.juoserver.game.core.event.EventBus;
 import com.github.mayconr.juoserver.game.core.event.MobileMove;
 import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
-import com.github.mayconr.juoserver.game.packet.DrawGamePlayer;
-import com.github.mayconr.juoserver.game.packet.DrawObject;
-import com.github.mayconr.juoserver.game.packet.MoveRequest;
-import com.github.mayconr.juoserver.game.packet.MovementAck;
+import com.github.mayconr.juoserver.game.packet.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +33,8 @@ class MovementService {
         database.getMobilesInRange(mobile, MobileFilter.ALL_VISIBLE)
                 .filter(someone->!someone.equals(mobile)) // avoid unnecessary packet
                 .forEach(someone->ctx.write(new DrawObject(someone)));
+        database.getItemsInRange(mobile)
+                .forEach(item->ctx.write(new ObjectInfo(item)));
         ctx.flush();
         channelGroup.writeAndFlush(new DrawObject(mobile), channel -> !channel.equals(ctx.channel())); // TODO only for close mobiles
 

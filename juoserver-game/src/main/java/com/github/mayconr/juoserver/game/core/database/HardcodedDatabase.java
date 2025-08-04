@@ -5,7 +5,11 @@ import com.github.mayconr.juoserver.game.core.prototype.ItemPrototype;
 import com.github.mayconr.juoserver.game.core.prototype.PrototypeManager;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,9 +21,10 @@ public class HardcodedDatabase implements Database {
     private static final int OBJECTS_MAX_SERIAL_ID = 0x7FFFFFFF;
     private static final List<UOAccount> ACCOUNTS = new ArrayList<>();
     private static final List<UOMobile> MOBILES = new ArrayList<>();
-    private static final List<UOItem> OBJECTS = new ArrayList<>();
+    private static final List<UOItem> OBJECTS = new CopyOnWriteArrayList<>();
     private static final AtomicInteger MOBILE_COUNTER = new AtomicInteger(1);
     private static final AtomicInteger OBJECT_COUNTER = new AtomicInteger(OBJECTS_MIN_SERIAL_ID);
+    private static final Map<Long, List<UOItem>> GROUNDED_ITEMS = new ConcurrentHashMap<>();
 
     private final PrototypeManager prototypeManager;
 
@@ -165,7 +170,58 @@ public class HardcodedDatabase implements Database {
             item = new UOItem(OBJECT_COUNTER.getAndIncrement(), prototype, location);
         }
         OBJECTS.add(item);
+
+        int blockX = item.getX() / 24;
+        int blockY = item.getY() / 24;
+        long key = regionKey(blockX, blockY);
+        List<UOItem> items = GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
+        synchronized (items) {
+            items.add(item);
+        }
         return item;
+    }
+
+    @Override
+    public void dropItemOnTheGround(UOItem item) {
+        int blockX = item.getX() / 24;
+        int blockY = item.getY() / 24;
+        long key = regionKey(blockX, blockY);
+        List<UOItem> items = GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
+        synchronized (items) {
+            items.add(item);
+        }
+    }
+
+    @Override
+    public void removeItemFromTheGround(UOItem item) {
+        int blockX = item.getX() / 24;
+        int blockY = item.getY() / 24;
+        long key = regionKey(blockX, blockY);
+        List<UOItem> items = GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
+        synchronized (items) {
+            items.remove(item);
+        }
+    }
+
+    @Override
+    public List<UOItem> getItemsInRange(Location location) {
+        final int blockX = location.getX() / 24;
+        final int blockY = location.getY() / 24;
+        final List<UOItem> items = new ArrayList<>(90);
+        for (int x=-1; x<=1; x++) {
+            for (int y=-1; y<=1; y++) {
+                final long key =regionKey(blockX + x, blockY + y);
+                final var partialItems = GROUNDED_ITEMS.get(key);
+                if (partialItems != null && !partialItems.isEmpty()) {
+                    items.addAll(partialItems);
+                }
+            }
+        }
+        return items;
+    }
+
+    private long regionKey(int x, int y) {
+        return (((long) x) << 32) | (y & 0xFFFFFFFFL);
     }
 
     @Override

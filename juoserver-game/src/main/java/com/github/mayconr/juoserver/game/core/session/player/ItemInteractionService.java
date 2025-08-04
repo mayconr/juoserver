@@ -40,7 +40,8 @@ class ItemInteractionService {
                 .orElseThrow(()->new ItemNotFoundException(droppedItem.getSerialId()));
 
         if (isItemMovable(item)) {
-            item.setLocation(droppedItem.getX(), droppedItem.getY(), droppedItem.getZ());
+            item.setLocation(droppedItem);
+            database.dropItemOnTheGround(item);
         }
         channelGroup.write(new ObjectInfo(item)); // TODO filter by range
         channelGroup.flush();
@@ -80,7 +81,12 @@ class ItemInteractionService {
         final var item = database.getItemBySerialId(equipItem.getItemSerialId())
                 .orElseThrow(()->new ItemNotFoundException(equipItem.getItemSerialId()));
 
-        mobile.removeItemFromContainer(item);
+        if (item.getContainer() != null) {
+            mobile.removeItemFromContainer(item);
+        } else {
+            database.removeItemFromTheGround(item);
+        }
+
         mobile.equipItem(equipItem.getLayer(), item);
 
         if (log.isDebugEnabled())

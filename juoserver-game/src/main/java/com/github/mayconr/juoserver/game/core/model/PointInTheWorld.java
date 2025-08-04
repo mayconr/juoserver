@@ -1,5 +1,10 @@
 package com.github.mayconr.juoserver.game.core.model;
 
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@ToString
+@EqualsAndHashCode
 public class PointInTheWorld implements Location {
 
     private final int x;
