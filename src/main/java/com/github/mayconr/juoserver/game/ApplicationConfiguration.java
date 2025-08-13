@@ -45,7 +45,7 @@ import java.util.List;
         DatabaseConfiguration.class,
         PrototypeConfiguration.class
 })
-public class JUOServerGameConfiguration {
+public class ApplicationConfiguration {
 
     // ========= Independents =========
 

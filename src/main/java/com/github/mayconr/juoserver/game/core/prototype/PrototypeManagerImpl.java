@@ -16,7 +16,7 @@ public class PrototypeManagerImpl implements PrototypeManager {
 
     public PrototypeManagerImpl() {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        try (InputStream in = new FileInputStream("juoserver-game/prototype/items.yaml")) {
+        try (InputStream in = new FileInputStream("prototype/items.yaml")) {
             final List<ItemPrototype> items = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, ItemPrototype.class));
             for (ItemPrototype item : items) {
                 idItemPrototypeMap.put(item.getItemId(), item);
@@ -26,7 +26,7 @@ public class PrototypeManagerImpl implements PrototypeManager {
             throw new RuntimeException(e);
         }
 
-        try (InputStream in = new FileInputStream("juoserver-game/prototype/npcs.yaml")) {
+        try (InputStream in = new FileInputStream("prototype/npcs.yaml")) {
             final List<NpcPrototype> npcs = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, NpcPrototype.class));
             for (NpcPrototype npc : npcs) {
                 npcPrototypeMap.put(npc.getNpcId(), npc);

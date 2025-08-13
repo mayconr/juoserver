@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class JUOServerGameApplication {
+public class ApplicationMain {
 
 	public static void main(String[] args) {
-		SpringApplication.run(JUOServerGameApplication.class, args);
+		SpringApplication.run(ApplicationMain.class, args);
 	}
 
 }
