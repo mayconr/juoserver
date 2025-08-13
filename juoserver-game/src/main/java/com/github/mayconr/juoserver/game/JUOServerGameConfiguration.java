@@ -5,6 +5,8 @@ import com.github.mayconr.juoserver.game.core.ai.NpcAiRegistry;
 import com.github.mayconr.juoserver.game.core.ai.DefaultNpcAiRegistry;
 import com.github.mayconr.juoserver.game.core.ai.ollama.OllamaClientChatImpl;
 import com.github.mayconr.juoserver.game.core.ai.ollama.OllanaClient;
+import com.github.mayconr.juoserver.game.core.combat.CombatSystem;
+import com.github.mayconr.juoserver.game.core.combat.DefaultCombatSystem;
 import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.core.database.DatabaseConfiguration;
 import com.github.mayconr.juoserver.game.core.event.DefaultEventBus;
@@ -64,6 +66,13 @@ public class JUOServerGameConfiguration {
         return gameloop.start();
     }
 
+    @Bean
+    public CombatSystem combatSystem(GameLoop gameLoop, ChannelGroup channelGroup) {
+        final var combatSystem = new DefaultCombatSystem(channelGroup);
+        gameLoop.addTask(combatSystem);
+        return combatSystem;
+    }
+
     // ========= Session Factory / Core Game Session =========
 
     @Bean
@@ -71,9 +80,10 @@ public class JUOServerGameConfiguration {
             ChannelGroup channelGroup,
             EventBus eventBus,
             Database database,
-            GameLoop gameLoop
+            GameLoop gameLoop,
+            CombatSystem combatSystem
     ) {
-        return new PlayerSessionFactory(channelGroup, eventBus, database, gameLoop);
+        return new PlayerSessionFactory(channelGroup, eventBus, database, gameLoop, combatSystem);
     }
 
     @Bean
@@ -115,7 +125,8 @@ public class JUOServerGameConfiguration {
                 new TargetHandler(),
                 new GetPlayerStatusHandler(),
                 new RequestHelpHandler(),
-                new RequestWarModeHandler()
+                new RequestWarModeHandler(),
+                new AttackRequestHandler()
         );
     }
 

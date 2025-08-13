@@ -1,9 +1,6 @@
 package com.github.mayconr.juoserver.game.core.session.player;
 
-import com.github.mayconr.juoserver.game.core.model.Container;
-import com.github.mayconr.juoserver.game.core.model.CursorType;
-import com.github.mayconr.juoserver.game.core.model.Location;
-import com.github.mayconr.juoserver.game.core.model.UOMobile;
+import com.github.mayconr.juoserver.game.core.model.*;
 import com.github.mayconr.juoserver.game.packet.*;
 
 import java.util.List;
@@ -39,4 +36,8 @@ public interface PlayerSession {
     void sendTarget(CursorType type);
 
     void handleTarget(Target target);
+
+    void handleWarMode(WarModeType type);
+
+    void attack(int opponentSerialId);
 }

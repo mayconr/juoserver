@@ -12,7 +12,6 @@ public
 class MoveRequestHandler extends PlayerSessionChannelInboundHandler<MoveRequest> {
     @Override
     protected void channelRead0(PlayerSession session, ChannelHandlerContext ctx, MoveRequest moveRequest) {
-        log.info("running {}",moveRequest.isRunning());
         session.move(moveRequest);
     }
 }

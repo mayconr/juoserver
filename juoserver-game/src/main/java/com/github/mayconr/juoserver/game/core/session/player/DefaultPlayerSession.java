@@ -19,6 +19,7 @@ public class DefaultPlayerSession implements PlayerSession {
     private final DoubleClickService doubleClickService;
     private final MegaClilocService megaClilocService;
     private final TargetService targetService;
+    private final CombatService combatService;
 
     private boolean active;
     private String clientVersion;
@@ -102,5 +103,15 @@ public class DefaultPlayerSession implements PlayerSession {
     @Override
     public void handleTarget(Target target) {
         targetService.handleTarget(target);
+    }
+
+    @Override
+    public void handleWarMode(WarModeType type) {
+        combatService.handleWarMode(type);
+    }
+
+    @Override
+    public void attack(int opponentSerialId) {
+        combatService.handleAttack(opponentSerialId);
     }
 }
