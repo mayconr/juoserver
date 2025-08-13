@@ -1,0 +1,72 @@
+- itemId: 1
+  modelId: 0x25A6
+  name: Teste
+  movable: false
+  hue: 0x13
+
+- itemId: 3
+  name: Bau da Felicidade
+  type: CONTAINER
+  modelId: 0x0E40
+  movable: false
+  hue: 0
+
+- itemId: 4
+  name: backpack
+  type: CONTAINER
+  modelId: 0x0E75
+  movable: false
+  hue: 0
+  container:
+    gumpId: 0x003C
+
+- itemId: 5
+  name: shoes
+  type: CLOTHING
+  modelId: 0x170F
+  movable: true
+  hue: 0
+
+- itemId: 6
+  name: hat
+  type: CLOTHING
+  modelId: 0x1717
+  movable: true
+  hue: 0
+
+- itemId: 7
+  name: robe
+  type: CLOTHING
+  modelId: 0x1F03
+  movable: true
+  hue: 0x6b7
+
+- itemId: 8
+  name: shirt
+  type: CLOTHING
+  modelId: 0x1538
+  movable: true
+  hue: 0x482
+
+- itemId: 9
+  name: pants
+  type: CLOTHING
+  modelId: 0x152E
+  movable: true
+  hue: 0x482
+
+- itemId: 10
+  name: robe2
+  type: CLOTHING
+  modelId: 0x1EFF
+  movable: true
+  hue: 0x550
+
+- itemId: 11
+  name: Vault
+  type: CONTAINER
+  modelId: 0x09A8
+  movable: false
+  hidden: true
+  container:
+    gumpId: 0x4A
