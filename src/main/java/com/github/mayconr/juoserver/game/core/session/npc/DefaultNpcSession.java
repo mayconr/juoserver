@@ -6,11 +6,9 @@ import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.core.model.UONpc;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
-import com.github.mayconr.juoserver.game.packet.DrawObject;
+import com.github.mayconr.juoserver.game.packet.DrawMobile;
 import com.github.mayconr.juoserver.game.packet.SendSpeech;
 import io.netty.channel.group.ChannelGroup;
-
-import java.util.Collections;
 
 public class DefaultNpcSession implements NpcSession {
 
@@ -47,7 +45,7 @@ public class DefaultNpcSession implements NpcSession {
     @Override
     public void move(Direction direction) {
         npc.move(direction);
-        channelGroup.writeAndFlush(new DrawObject(npc));
+        channelGroup.writeAndFlush(new DrawMobile(npc));
     }
 
     @Override

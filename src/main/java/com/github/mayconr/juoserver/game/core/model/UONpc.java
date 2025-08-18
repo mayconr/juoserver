@@ -1,10 +1,10 @@
 package com.github.mayconr.juoserver.game.core.model;
 
-import com.github.mayconr.juoserver.game.core.ai.BankerAI;
-import com.github.mayconr.juoserver.game.core.ai.NpcAI;
 import com.github.mayconr.juoserver.game.core.prototype.NpcPrototype;
 import lombok.Getter;
+import lombok.Setter;
 
+@Setter
 @Getter
 public class UONpc extends UOMobile {
     private final NpcType type;

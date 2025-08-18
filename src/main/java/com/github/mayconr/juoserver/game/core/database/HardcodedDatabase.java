@@ -142,24 +142,32 @@ public class HardcodedDatabase implements Database {
                 .orElseThrow(()->new NpcPrototypeNotFoundException(npcId));
         final var npc = new UONpc(MOBILE_COUNTER.getAndIncrement(), npcPrototype, location);
         for (Map.Entry<Layer, String> entry : npcPrototype.getEquippedItems().entrySet()) {
-            npc.equipItem(entry.getKey(), createItemAtLocation(entry.getValue(), location));
+            npc.equipItem(entry.getKey(), createItem(entry.getValue()));
         }
         MOBILES.add(npc);
         return npc;
     }
 
     @Override
-    public UOItem createItemAtLocation(int itemId, Location location) {
-        final var prototype = prototypeManager.getItemById(itemId)
-                .orElseThrow(()->new ItemPrototypeNotFoundException(itemId));
-        return createItemByPrototype(prototype, location);
-    }
-
-    @Override
     public UOItem createItemAtLocation(String name, Location location) {
         final var prototype = prototypeManager.getItemByName(name)
                 .orElseThrow(()->new ItemPrototypeNotFoundException(name));
-        return createItemByPrototype(prototype, location);
+        final var item = createItemByPrototype(prototype, location);
+
+        // geo index
+        final var blockX = item.getX() / 24;
+        final var blockY = item.getY() / 24;
+        final var key = regionKey(blockX, blockY);
+        GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)))
+                .add(item);
+        return item;
+    }
+
+    @Override
+    public UOItem createItem(String name) {
+        final var prototype = prototypeManager.getItemByName(name)
+                .orElseThrow(()->new ItemPrototypeNotFoundException(name));
+        return createItemByPrototype(prototype, new PointInTheWorld(0,0, 0));
     }
 
     private UOItem createItemByPrototype(ItemPrototype prototype, Location location) {
@@ -170,14 +178,6 @@ public class HardcodedDatabase implements Database {
             item = new UOItem(OBJECT_COUNTER.getAndIncrement(), prototype, location);
         }
         OBJECTS.add(item);
-
-        int blockX = item.getX() / 24;
-        int blockY = item.getY() / 24;
-        long key = regionKey(blockX, blockY);
-        List<UOItem> items = GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
-        synchronized (items) {
-            items.add(item);
-        }
         return item;
     }
 

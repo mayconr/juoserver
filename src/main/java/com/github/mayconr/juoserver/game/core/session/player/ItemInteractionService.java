@@ -30,7 +30,7 @@ class ItemInteractionService {
             }
             if (mobile.isItemEquipped(item)) {
                 mobile.unequipItem(item);
-                channelGroup.writeAndFlush(new DrawObject(mobile)); // TODO filter by range
+                channelGroup.writeAndFlush(new DrawMobile(mobile)); // TODO filter by range
             }
         }
     }
@@ -92,7 +92,7 @@ class ItemInteractionService {
         if (log.isDebugEnabled())
             log.debug("Item [{}] equipped on layer [{}]", item.getSerialId(), equipItem.getLayer());
 
-        channelGroup.writeAndFlush(new DrawObject(mobile)); // TODO filter by range
+        channelGroup.writeAndFlush(new DrawMobile(mobile)); // TODO filter by range
     }
 
     public void handleOpenContainer(Container container) {

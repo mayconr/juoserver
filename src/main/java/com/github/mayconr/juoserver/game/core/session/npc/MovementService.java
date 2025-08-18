@@ -3,7 +3,7 @@ package com.github.mayconr.juoserver.game.core.session.npc;
 import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.core.model.UONpc;
-import com.github.mayconr.juoserver.game.packet.DrawObject;
+import com.github.mayconr.juoserver.game.packet.DrawMobile;
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +17,7 @@ public class MovementService {
 
     public void move(Direction direction) {
         npc.move(direction);
-        channelGroup.writeAndFlush(new DrawObject(npc));
+        channelGroup.writeAndFlush(new DrawMobile(npc));
     }
 
     public void move(Location location) {
@@ -30,7 +30,7 @@ public class MovementService {
         try {
             final var pathfinder = new Pathfinder(map, Collections.emptySet());
             pathfinder.findNextDirection(npc, location).ifPresent(npc::move);
-            channelGroup.writeAndFlush(new DrawObject(npc));
+            channelGroup.writeAndFlush(new DrawMobile(npc));
         } catch (Exception exception) {
             exception.printStackTrace();;
         }

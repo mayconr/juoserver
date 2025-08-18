@@ -70,3 +70,10 @@
   hidden: true
   container:
     gumpId: 0x4A
+
+- itemId: 12
+  name: spear
+  type: WEAPON
+  modelId: 0x0F63
+  movable: true
+  hidden: false

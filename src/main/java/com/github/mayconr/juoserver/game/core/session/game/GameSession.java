@@ -18,7 +18,6 @@ public interface GameSession {
 
     PlayerSession createPlayerSession(UOPlayer player, ChannelHandlerContext ctx);
 
-    UOItem createItemAtLocation(int itemId, Location location);
     UOItem createItemAtLocation(String name, Location location);
 
     void deleteItem(UOItem item);

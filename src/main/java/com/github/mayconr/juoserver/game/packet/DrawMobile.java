@@ -8,13 +8,13 @@ import io.netty.buffer.ByteBuf;
 
 import java.util.Map;
 
-public class DrawObject extends AbstractPacket {
+public class DrawMobile extends AbstractPacket {
 
     public static final int CODE = (byte) 0x78;
 
     private final UOMobile mobile;
 
-    public DrawObject(UOMobile mobile) {
+    public DrawMobile(UOMobile mobile) {
         super(CODE, computeLength(mobile));
         this.mobile = mobile;
     }

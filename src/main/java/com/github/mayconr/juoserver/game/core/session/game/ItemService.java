@@ -22,12 +22,6 @@ public class ItemService {
     private final ChannelGroup channelGroup;
     private final EventBus eventBus;
 
-    public UOItem handleCreateItemAtLocation(int itemId, Location location) {
-        final var item = database.createItemAtLocation(itemId, location);
-        updateItem(item, location);
-        return item;
-    }
-
     public UOItem handleCreateItemAtLocation(String name, Location location) {
         final var item = database.createItemAtLocation(name, location);
         updateItem(item, location);

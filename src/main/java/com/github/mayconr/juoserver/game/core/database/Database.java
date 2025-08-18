@@ -27,9 +27,14 @@ public interface Database {
 
     UONpc createNpcAtLocation(int npcId, Location location);
 
-    UOItem createItemAtLocation(int itemId, Location location);
-
     UOItem createItemAtLocation(String name, Location location);
+
+    /**
+     * Create a new item without a location
+     * @param name Item name
+     * @return created item
+     */
+    UOItem createItem(String name);
 
     void dropItemOnTheGround(UOItem item);
 

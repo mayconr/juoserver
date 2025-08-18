@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class Teste {
+public class Test {
 
     @Autowired
     private EventBus eventBus;

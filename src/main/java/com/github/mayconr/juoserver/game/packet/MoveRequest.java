@@ -18,9 +18,6 @@ public class MoveRequest extends AbstractPacket {
         super(CODE, 7);
         buf.readByte(); // CODE
         final var directionWithRunningInfo = buf.readByte();
-
-        System.out.println("direction - "+directionWithRunningInfo+" "+((directionWithRunningInfo & 0xF0) == 0x80));
-
         this.direction = Direction.values()[directionWithRunningInfo & 0x07];
         this.running = (directionWithRunningInfo & 0xF0) == 0x80;
         this.sequence = buf.readByte() & 0xFF;

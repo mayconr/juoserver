@@ -3,6 +3,7 @@ package com.github.mayconr.juoserver.game.core.prototype;
 import com.github.mayconr.juoserver.game.core.model.*;
 import lombok.Data;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Data
@@ -17,7 +18,10 @@ public class NpcPrototype {
     private int hue;
     private int speechFont;
     private int speechHue;
+    private int maxHitpoints;
+    private int maxStamina;
+    private int maxMana;
     private String ai;
-    private Map<Layer, String> equippedItems;
+    private Map<Layer, String> equippedItems = new HashMap<>();
 
 }

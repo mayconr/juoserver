@@ -11,7 +11,7 @@ import com.github.mayconr.juoserver.game.core.session.npc.NpcSessionFactory;
 import com.github.mayconr.juoserver.game.core.session.player.DefaultPlayerSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSessionFactory;
-import com.github.mayconr.juoserver.game.packet.*;
+import com.github.mayconr.juoserver.game.packet.DrawMobile;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class DefaultGameSession implements GameSession {
         final var npc = database.createNpcAtLocation(npcId, location);
         try {
             final var session = npcNpcSessionMap.putIfAbsent(npc, npcSessionFactory.create(this, npc));
-            channelGroup.writeAndFlush(new DrawObject(npc));
+            channelGroup.writeAndFlush(new DrawMobile(npc));
             eventBus.publish(new NpcSessionCreated(session));
             return session;
         } catch (Exception e) {
@@ -78,11 +78,6 @@ public class DefaultGameSession implements GameSession {
 
             return session;
         });
-    }
-
-    @Override
-    public UOItem createItemAtLocation(int itemId, Location location) {
-        return itemService.handleCreateItemAtLocation(itemId, location);
     }
 
     @Override

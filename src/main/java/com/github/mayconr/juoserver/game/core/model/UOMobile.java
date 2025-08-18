@@ -1,5 +1,6 @@
 package com.github.mayconr.juoserver.game.core.model;
 
+import com.github.mayconr.juoserver.game.core.prototype.NpcPrototype;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -89,6 +90,20 @@ public class UOMobile extends UOObject implements Container {
         this.notoriety = notoriety;
         this.race = race;
         this.gender = gender;
+    }
+
+    public UOMobile(int serialId, Location location, Direction direction, CharacterStatus status,
+                    NpcPrototype prototype) {
+        super(serialId, prototype.getModelId(), location, prototype.getName());
+        this.direction = direction;
+        this.hue = prototype.getHue();
+        this.status = status;
+        this.notoriety = prototype.getNotoriety();
+        this.race = prototype.getRace();
+        this.gender = prototype.getGender();
+        this.maxHitpoints = prototype.getMaxHitpoints();
+        this.maxStamina = prototype.getMaxStamina();
+        this.maxMana = prototype.getMaxMana();
     }
 
     public void equipItem(Layer layer, UOItem item) {

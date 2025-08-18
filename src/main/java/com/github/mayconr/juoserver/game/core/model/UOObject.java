@@ -33,6 +33,15 @@ public class UOObject implements Location, AttributeSupport {
         this.name = name;
     }
 
+    public UOObject(int serialId, int modelId, Location location, String name) {
+        this.serialId = serialId;
+        this.modelId = modelId;
+        this.x = location.getX();
+        this.y = location.getY();
+        this.z = location.getZ();
+        this.name = name;
+    }
+
     public void setLocation(int x, int y) {
         this.x = x;
         this.y = y;
