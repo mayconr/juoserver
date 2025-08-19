@@ -77,3 +77,17 @@
   modelId: 0x0F63
   movable: true
   hidden: false
+
+- itemId: 13
+  name: Llama
+  type: MOUNT
+  modelId: 0x3EA6
+  movable: true
+  hidden: false
+
+- itemId: 13
+  name: Horse
+  type: MOUNT
+  modelId: 0x3EA0
+  movable: true
+  hidden: false

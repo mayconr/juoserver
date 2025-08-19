@@ -149,7 +149,7 @@ public class HardcodedDatabase implements Database {
     }
 
     @Override
-    public UOItem createItemAtLocation(String name, Location location) {
+    public UOItem createItemOnTheGround(String name, Location location) {
         final var prototype = prototypeManager.getItemByName(name)
                 .orElseThrow(()->new ItemPrototypeNotFoundException(name));
         final var item = createItemByPrototype(prototype, location);
@@ -168,6 +168,13 @@ public class HardcodedDatabase implements Database {
         final var prototype = prototypeManager.getItemByName(name)
                 .orElseThrow(()->new ItemPrototypeNotFoundException(name));
         return createItemByPrototype(prototype, new PointInTheWorld(0,0, 0));
+    }
+
+    @Override
+    public UOItem createItem(String name, Location location) {
+        final var prototype = prototypeManager.getItemByName(name)
+                .orElseThrow(()->new ItemPrototypeNotFoundException(name));
+        return createItemByPrototype(prototype, location);
     }
 
     private UOItem createItemByPrototype(ItemPrototype prototype, Location location) {

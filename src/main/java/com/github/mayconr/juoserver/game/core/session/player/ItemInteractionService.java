@@ -77,7 +77,7 @@ class ItemInteractionService {
         return Boolean.TRUE.equals(item.getAndSetAttribute(ATTR_KEY_CAN_MOVE_ITEM, null));
     }
 
-    public void handleEquipItem(EquipItem equipItem) {
+    public void handleEquipItem(EquipItemRequest equipItem) {
         final var item = database.getItemBySerialId(equipItem.getItemSerialId())
                 .orElseThrow(()->new ItemNotFoundException(equipItem.getItemSerialId()));
 

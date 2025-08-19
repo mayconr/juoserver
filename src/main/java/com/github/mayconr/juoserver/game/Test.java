@@ -27,6 +27,8 @@ public class Test {
         eventBus.register(Prompt.class, this::move, prompt -> prompt.name().equalsIgnoreCase("goto"));
         eventBus.register(Prompt.class, this::where, prompt -> prompt.name().equalsIgnoreCase("where"));
         eventBus.register(Prompt.class, this::select, prompt -> prompt.name().equalsIgnoreCase("target"));
+        eventBus.register(Prompt.class, this::mount, prompt->prompt.name().equalsIgnoreCase("mount"));
+        eventBus.register(Prompt.class, this::unmound, prompt->prompt.name().equalsIgnoreCase("unmount"));
         eventBus.register(SelectedObject.class, this::objectSelected);
         eventBus.register(SelectedStatics.class, this::staticSelected);
     }
@@ -47,6 +49,7 @@ public class Test {
     }
 
     public HandlerResult createNpc(Prompt prompt) {
+
         gameSession.createNpcSession(Integer.parseInt(prompt.arguments()[0]), prompt.mobile());
         return HandlerResult.CONTINUE;
     }
@@ -79,5 +82,15 @@ public class Test {
 
     public void updateStatus(Prompt prompt) {
 
+    }
+
+    public HandlerResult mount(Prompt prompt) {
+        gameSession.getPlayerSession(prompt.mobile()).mount(0xc8);
+        return HandlerResult.CONTINUE;
+    }
+
+    public HandlerResult unmound(Prompt prompt) {
+        gameSession.getPlayerSession(prompt.mobile()).unmount();
+        return HandlerResult.CONTINUE;
     }
 }

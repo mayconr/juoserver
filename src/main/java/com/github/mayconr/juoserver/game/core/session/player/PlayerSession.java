@@ -1,6 +1,7 @@
 package com.github.mayconr.juoserver.game.core.session.player;
 
 import com.github.mayconr.juoserver.game.core.model.*;
+import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.packet.*;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface PlayerSession {
 
     boolean isActive();
 
-    void initialize(String clientVersion);
+    void initialize(GameSession gameSession, String clientVersion);
 
     void speech(UnicodeSpeachRequest request);
 
@@ -29,7 +30,7 @@ public interface PlayerSession {
 
     void move(Location location);
 
-    void equipItem(EquipItem equipItem);
+    void equipItem(EquipItemRequest equipItem);
 
     void openContainerInRange(Container container);
 
@@ -40,4 +41,8 @@ public interface PlayerSession {
     void handleWarMode(WarModeType type);
 
     void attack(int opponentSerialId);
+
+    void mount(int modelId);
+
+    void unmount();
 }

@@ -1,6 +1,7 @@
 package com.github.mayconr.juoserver.game.core.session.player;
 
 import com.github.mayconr.juoserver.game.core.model.*;
+import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.packet.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,10 +21,11 @@ public class DefaultPlayerSession implements PlayerSession {
     private final MegaClilocService megaClilocService;
     private final TargetService targetService;
     private final CombatService combatService;
+    private final RidingService ridingService;
 
-    private boolean active;
+    private GameSession gameSession;
     private String clientVersion;
-
+    private boolean active;
 
     public UOMobile getPlayer() {
         return player;
@@ -40,7 +42,8 @@ public class DefaultPlayerSession implements PlayerSession {
     }
 
     @Override
-    public void initialize(String clientVersion) {
+    public void initialize(GameSession gameSession, String clientVersion) {
+        this.gameSession = gameSession;
         this.clientVersion = clientVersion;
         initializationService.initialize(this, clientVersion);
     }
@@ -86,7 +89,7 @@ public class DefaultPlayerSession implements PlayerSession {
     }
 
     @Override
-    public void equipItem(EquipItem equipItem) {
+    public void equipItem(EquipItemRequest equipItem) {
         itemInteractionService.handleEquipItem(equipItem);
     }
 
@@ -113,5 +116,15 @@ public class DefaultPlayerSession implements PlayerSession {
     @Override
     public void attack(int opponentSerialId) {
         combatService.handleAttack(opponentSerialId);
+    }
+
+    @Override
+    public void mount(int modelId) {
+        ridingService.handleMount(modelId);
+    }
+
+    @Override
+    public void unmount() {
+        ridingService.handleUnmount();
     }
 }

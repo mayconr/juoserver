@@ -23,7 +23,7 @@ public class ItemService {
     private final EventBus eventBus;
 
     public UOItem handleCreateItemAtLocation(String name, Location location) {
-        final var item = database.createItemAtLocation(name, location);
+        final var item = database.createItemOnTheGround(name, location);
         updateItem(item, location);
         return item;
     }

@@ -1,8 +1,8 @@
 package com.github.mayconr.juoserver.game;
 
 import com.github.mayconr.juoserver.game.core.ai.BankerAI;
-import com.github.mayconr.juoserver.game.core.ai.NpcAiRegistry;
 import com.github.mayconr.juoserver.game.core.ai.DefaultNpcAiRegistry;
+import com.github.mayconr.juoserver.game.core.ai.NpcAiRegistry;
 import com.github.mayconr.juoserver.game.core.ai.ollama.OllamaClientChatImpl;
 import com.github.mayconr.juoserver.game.core.ai.ollama.OllanaClient;
 import com.github.mayconr.juoserver.game.core.combat.CombatSystem;
@@ -112,7 +112,7 @@ public class ApplicationConfiguration {
                 new LoginCharacterHandler(gameSession),
                 new DeleteCharacterHandler(database),
                 new CreateCharacterHandler(database),
-                new ClientVersionHandler(),
+                new ClientVersionHandler(gameSession),
                 new MoveRequestHandler(),
                 new DoubleClickHandler(),
                 new UnicodeSpeachRequestHandler(),
