@@ -27,7 +27,7 @@ public class PlayerSessionFactory {
         final var megaClilocService = new MegaClilocService(player, ctx, database);
         final var targetService = new TargetService(player, ctx, eventBus);
         final var combatService = new CombatService(player, channelGroup, ctx, combatSystem);
-        final var mountService = new RidingService(player, ctx, database);
+        final var mountService = new RidingService(player, channelGroup, database);
         final var session = new DefaultPlayerSession(player, initializationServie, speechService, movementService, itemIteractionService, clickService, megaClilocService, targetService, combatService, mountService);
         gameLoop.addTask(new PlayerVitalsTask(session));
         return session;
