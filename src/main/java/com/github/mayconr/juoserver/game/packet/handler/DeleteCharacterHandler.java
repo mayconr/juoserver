@@ -25,7 +25,7 @@ class DeleteCharacterHandler extends SimpleChannelInboundHandler<DeleteCharacter
             ctx.writeAndFlush(new LoginReject(LoginReject.Reason.SYNCHRONIZATION_ERROR));
             return;
         }
-        database.deletePlayer(character);
+        database.deleteMobile(character);
         ctx.writeAndFlush(new LoginReject(LoginReject.Reason.CHAR_DOES_NOT_EXIST));
     }
 }

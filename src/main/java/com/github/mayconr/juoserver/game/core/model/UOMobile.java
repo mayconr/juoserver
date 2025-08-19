@@ -160,4 +160,8 @@ public class UOMobile extends UOObject implements Container {
         this.direction = direction;
         setLocation(getX() + direction.getDx(), getY() + direction.getDy());
     }
+
+    public boolean isWarMode() {
+        return CharacterStatus.WAR_MODE.equals(status);
+    }
 }

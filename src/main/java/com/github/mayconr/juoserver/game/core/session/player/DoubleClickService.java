@@ -11,9 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class DoubleClickService {
 
-    private final UOMobile mobile;
+    private final UOPlayer player;
     private final Database database;
     private final ChannelHandlerContext ctx;
+    private final MountService mountService;
 
     public void handleDoubleClick(DoubleClick doubleClick) {
         final var serialId = doubleClick.getSerialId();
@@ -26,6 +27,25 @@ class DoubleClickService {
     }
 
     private void handleMobileDoubleClick(int serialId) {
+        if (serialId == player.getSerialId()) {
+            if (!player.isWarMode() && player.getEquippedItems().containsKey(Layer.MOUNT)) {
+                mountService.handleUnmount();
+            } else {
+                openPaperdoll(serialId);
+            }
+        } else {
+            final var otherMobile = database.getMobileSerialId(serialId)
+                    .orElseThrow(() -> new MobileNotFoundException(serialId));
+            if (otherMobile instanceof UONpc npc) {
+                if (NpcType.MOUNT.equals(npc.getType())) {
+                    mountService.handleMount(npc);
+                }
+            }
+            openPaperdoll(serialId);
+        }
+    }
+
+    private void openPaperdoll(int serialId) {
         final var mobile = database.getMobileSerialId(serialId)
                 .orElseThrow(() -> new MobileNotFoundException(serialId));
 
@@ -51,9 +71,9 @@ class DoubleClickService {
 
             ctx.flush();
         } else {
-            mobile.addItemToContainer(item);
-            ctx.writeAndFlush(new AddItemToContainer(mobile, item));
-            log.info("Item [{}-{}] added to container [{}-{}]", item.getSerialId(), item.getName(), mobile.getSerialId(), mobile.getName());
+            player.addItemToContainer(item);
+            ctx.writeAndFlush(new AddItemToContainer(player, item));
+            log.info("Item [{}-{}] added to container [{}-{}]", item.getSerialId(), item.getName(), player.getSerialId(), player.getName());
         }
     }
 

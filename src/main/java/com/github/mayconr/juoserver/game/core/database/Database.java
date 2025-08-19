@@ -21,11 +21,11 @@ public interface Database {
 
     Stream<UOMobile> getMobilesInRange(Location location, MobileFilter filter);
 
-    void deletePlayer(UOPlayer character);
+    void deleteMobile(UOMobile mobile);
 
     UOPlayer createPlayer(PlayerDetails details);
 
-    UONpc createNpcAtLocation(int npcId, Location location);
+    UONpc createNpcAtLocation(String name, Location location);
 
     /**
      * Item will be created at informed location and added to the ground items (will be updated on movements)

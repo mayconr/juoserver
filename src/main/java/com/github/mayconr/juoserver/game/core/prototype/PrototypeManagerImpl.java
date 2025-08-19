@@ -10,16 +10,14 @@ import java.util.*;
 
 public class PrototypeManagerImpl implements PrototypeManager {
 
-    private final Map<Integer, ItemPrototype> idItemPrototypeMap = new HashMap<>();
     private final Map<String, ItemPrototype> nameItemPrototypeMap = new HashMap<>();
-    private final Map<Integer, NpcPrototype> npcPrototypeMap = new HashMap<>();
+    private final Map<String, NpcPrototype> npcPrototypeMap = new HashMap<>();
 
     public PrototypeManagerImpl() {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         try (InputStream in = new FileInputStream("prototype/items.yaml")) {
             final List<ItemPrototype> items = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, ItemPrototype.class));
             for (ItemPrototype item : items) {
-                idItemPrototypeMap.put(item.getItemId(), item);
                 nameItemPrototypeMap.put(item.getName(), item);
             }
         } catch (IOException e) {
@@ -29,7 +27,7 @@ public class PrototypeManagerImpl implements PrototypeManager {
         try (InputStream in = new FileInputStream("prototype/npcs.yaml")) {
             final List<NpcPrototype> npcs = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, NpcPrototype.class));
             for (NpcPrototype npc : npcs) {
-                npcPrototypeMap.put(npc.getNpcId(), npc);
+                npcPrototypeMap.put(npc.getName(), npc);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -42,17 +40,12 @@ public class PrototypeManagerImpl implements PrototypeManager {
     }
 
     @Override
-    public Optional<ItemPrototype> getItemById(int itemId) {
-        return Optional.ofNullable(idItemPrototypeMap.get(itemId));
-    }
-
-    @Override
     public Optional<ItemPrototype> getItemByName(String name) {
         return Optional.ofNullable(nameItemPrototypeMap.get(name));
     }
 
     @Override
-    public Optional<NpcPrototype> getNpcById(int npcId) {
+    public Optional<NpcPrototype> getNpcByName(String npcId) {
         return Optional.ofNullable(npcPrototypeMap.get(npcId));
     }
 }

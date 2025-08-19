@@ -42,7 +42,7 @@ public interface PlayerSession {
 
     void attack(int opponentSerialId);
 
-    void mount(int modelId);
+    void mount(String mount);
 
     void unmount();
 }

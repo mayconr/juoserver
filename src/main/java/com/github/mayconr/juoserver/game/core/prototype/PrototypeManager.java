@@ -6,9 +6,7 @@ import java.util.Optional;
 public interface PrototypeManager {
     Collection<ItemPrototype> getItems();
 
-    Optional<ItemPrototype> getItemById(int itemId);
-
     Optional<ItemPrototype> getItemByName(String name);
 
-    Optional<NpcPrototype> getNpcById(int npcId);
+    Optional<NpcPrototype> getNpcByName(String npcId);
 }

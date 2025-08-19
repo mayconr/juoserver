@@ -21,7 +21,7 @@ public class DefaultPlayerSession implements PlayerSession {
     private final MegaClilocService megaClilocService;
     private final TargetService targetService;
     private final CombatService combatService;
-    private final RidingService ridingService;
+    private final MountService mountService;
 
     private GameSession gameSession;
     private String clientVersion;
@@ -119,12 +119,12 @@ public class DefaultPlayerSession implements PlayerSession {
     }
 
     @Override
-    public void mount(int modelId) {
-        ridingService.handleMount(modelId);
+    public void mount(String mount) {
+        mountService.handleMount(mount);
     }
 
     @Override
     public void unmount() {
-        ridingService.handleUnmount();
+        mountService.handleUnmount();
     }
 }

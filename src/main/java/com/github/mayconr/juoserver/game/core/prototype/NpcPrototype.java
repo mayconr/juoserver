@@ -8,10 +8,10 @@ import java.util.Map;
 
 @Data
 public class NpcPrototype {
-    private int npcId;
     private NpcType type;
     private int modelId;
     private String name;
+    private String displayName;
     private Notoriety notoriety;
     private Race race;
     private Gender gender;
@@ -23,5 +23,10 @@ public class NpcPrototype {
     private int maxMana;
     private String ai;
     private Map<Layer, String> equippedItems = new HashMap<>();
+    private MountTypePrototype mount;
 
+    @Data
+    public static class MountTypePrototype {
+        private String name;
+    }
 }

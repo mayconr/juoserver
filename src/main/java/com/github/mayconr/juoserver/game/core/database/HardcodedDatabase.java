@@ -8,8 +8,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,7 +36,7 @@ public class HardcodedDatabase implements Database {
         ACCOUNTS.add(admin);
 
         final var elrond = new UOPlayer(MOBILE_COUNTER.getAndIncrement(), 0x190, 2514,550,0, "Elrond", Direction.NORTH,0x83EA,CharacterStatus.NORMAL,Notoriety.CRIMINAL,admin.getId(),"admin");
-        final var elrondBackpack = new UOContainer(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemById(4).orElseThrow(), new PointInTheWorld(0,0,0));
+        final var elrondBackpack = new UOContainer(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemByName("backpack").orElseThrow(), new PointInTheWorld(0,0,0));
         elrond.setBackpack(elrondBackpack);
         equipItem(elrond, Layer.OUTER_TORSO, "robe2");
         OBJECTS.add(elrondBackpack);
@@ -53,7 +51,7 @@ public class HardcodedDatabase implements Database {
         legolaz.setMana(11);
         legolaz.setStamina(100);
         legolaz.setMaxStamina(120);
-        final var backpack = new UOContainer(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemById(4).orElseThrow(), new PointInTheWorld(0,0,0));
+        final var backpack = new UOContainer(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemByName("backpack").orElseThrow(), new PointInTheWorld(0,0,0));
         legolaz.setBackpack(backpack);
         equipItem(legolaz, Layer.OUTER_TORSO, "robe");
         OBJECTS.add(backpack);
@@ -125,8 +123,8 @@ public class HardcodedDatabase implements Database {
     }
 
     @Override
-    public void deletePlayer(UOPlayer player) {
-        MOBILES.remove(player);
+    public void deleteMobile(UOMobile mobile) {
+        MOBILES.remove(mobile);
     }
 
     @Override
@@ -137,9 +135,9 @@ public class HardcodedDatabase implements Database {
     }
 
     @Override
-    public UONpc createNpcAtLocation(int npcId, Location location) {
-        final var npcPrototype = prototypeManager.getNpcById(npcId)
-                .orElseThrow(()->new NpcPrototypeNotFoundException(npcId));
+    public UONpc createNpcAtLocation(String name, Location location) {
+        final var npcPrototype = prototypeManager.getNpcByName(name)
+                .orElseThrow(()->new NpcPrototypeNotFoundException(name));
         final var npc = new UONpc(MOBILE_COUNTER.getAndIncrement(), npcPrototype, location);
         for (Map.Entry<Layer, String> entry : npcPrototype.getEquippedItems().entrySet()) {
             npc.equipItem(entry.getKey(), createItem(entry.getValue()));

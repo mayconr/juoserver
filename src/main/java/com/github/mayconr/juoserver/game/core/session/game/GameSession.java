@@ -14,7 +14,7 @@ public interface GameSession {
 
     PlayerSession getPlayerSession(UOMobile mobile);
 
-    NpcSession createNpcSession(int npcId, Location location);
+    NpcSession createNpcSession(String name, Location location);
 
     PlayerSession createPlayerSession(UOPlayer player, ChannelHandlerContext ctx);
 

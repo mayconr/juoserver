@@ -10,7 +10,6 @@ public
 class DoubleClickHandler extends PlayerSessionChannelInboundHandler<DoubleClick> {
     @Override
     protected void channelRead0(PlayerSession session, ChannelHandlerContext ctx, DoubleClick msg) {
-        System.out.println(msg);
         session.doubleClick(msg);
     }
 }

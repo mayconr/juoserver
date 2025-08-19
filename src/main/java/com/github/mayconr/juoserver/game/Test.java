@@ -1,9 +1,9 @@
 package com.github.mayconr.juoserver.game;
 
 import com.github.mayconr.juoserver.game.core.event.*;
+import com.github.mayconr.juoserver.game.core.model.CursorType;
 import com.github.mayconr.juoserver.game.core.model.PointInTheWorld;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
-import com.github.mayconr.juoserver.game.core.model.CursorType;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +49,7 @@ public class Test {
     }
 
     public HandlerResult createNpc(Prompt prompt) {
-
-        gameSession.createNpcSession(Integer.parseInt(prompt.arguments()[0]), prompt.mobile());
+        gameSession.createNpcSession(prompt.arguments()[0], prompt.mobile());
         return HandlerResult.CONTINUE;
     }
 
@@ -85,7 +84,7 @@ public class Test {
     }
 
     public HandlerResult mount(Prompt prompt) {
-        gameSession.getPlayerSession(prompt.mobile()).mount(0xc8);
+        gameSession.getPlayerSession(prompt.mobile()).mount(prompt.arguments()[0]);
         return HandlerResult.CONTINUE;
     }
 

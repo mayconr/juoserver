@@ -50,8 +50,8 @@ public class DefaultGameSession implements GameSession {
     }
 
     @Override
-    public NpcSession createNpcSession(int npcId, Location location) {
-        final var npc = database.createNpcAtLocation(npcId, location);
+    public NpcSession createNpcSession(String name, Location location) {
+        final var npc = database.createNpcAtLocation(name, location);
         try {
             final var session = npcNpcSessionMap.putIfAbsent(npc, npcSessionFactory.create(this, npc));
             channelGroup.writeAndFlush(new DrawMobile(npc));
