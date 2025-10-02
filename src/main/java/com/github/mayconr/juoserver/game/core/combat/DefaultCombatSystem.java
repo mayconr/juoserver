@@ -10,12 +10,15 @@ import io.netty.channel.group.ChannelGroup;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentMap;
 
 public class DefaultCombatSystem extends IntervalGameTask implements CombatSystem {
 
     private final Map<Integer, CombatState> combatStateMap = new HashMap<>();
     private final Queue<CombatCommand> commandQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentMap<Integer, Boolean> attackingIndex = new ConcurrentHashMap<>();
     private final ChannelGroup channelGroup;
 
     public DefaultCombatSystem(ChannelGroup channelGroup) {
@@ -35,14 +38,14 @@ public class DefaultCombatSystem extends IntervalGameTask implements CombatSyste
 
     @Override
     public boolean isAttacking(int attackerId) {
-        return combatStateMap.containsKey(attackerId);
+        return attackingIndex.containsKey(attackerId);
     }
 
     @Override
     public void execute() {
         CombatCommand cmd;
         while ((cmd = commandQueue.poll()) != null) {
-            cmd.apply(combatStateMap);
+            cmd.apply(combatStateMap, attackingIndex);
         }
 
         final var it = combatStateMap.entrySet().iterator();
@@ -55,28 +58,29 @@ public class DefaultCombatSystem extends IntervalGameTask implements CombatSyste
 
             if (!state.isAutoSwing()) {
                 it.remove();
-                continue;
+                attackingIndex.remove(state.getAttackerId());
             }
         }
     }
 
     public interface CombatCommand {
-        void apply(Map<Integer, CombatState> combatStateMap);
+        void apply(Map<Integer, CombatState> combatStateMap, ConcurrentMap<Integer, Boolean> attackingIndex);
     }
 
     private record RequestAttack(int attackerId, int targetId) implements CombatCommand {
         @Override
-        public void apply(Map<Integer, CombatState> combatStateMap) {
+        public void apply(Map<Integer, CombatState> combatStateMap, ConcurrentMap<Integer, Boolean> attackingIndex) {
             final var state = combatStateMap.computeIfAbsent(attackerId, id -> new CombatState(id, targetId));
             state.setSwing(1);
             state.setNextImpactAt(500); // windup, time until the next attack. compute based on strength dex, weapon
             state.setAutoSwing(true);
+            attackingIndex.put(attackerId, Boolean.TRUE);
         }
     }
 
     private record CancelAttack(int attackerId) implements CombatCommand {
         @Override
-        public void apply(Map<Integer, CombatState> combatStateMap) {
+        public void apply(Map<Integer, CombatState> combatStateMap, ConcurrentMap<Integer, Boolean> attackingIndex) {
             final var state = combatStateMap.get(attackerId);
             if (state != null) {
                 state.setAutoSwing(false);

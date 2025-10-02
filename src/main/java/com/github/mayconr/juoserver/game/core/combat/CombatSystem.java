@@ -7,4 +7,5 @@ public interface CombatSystem {
     void cancelAttack(int attackerId);
 
     boolean isAttacking(int attackerId);
+
 }
