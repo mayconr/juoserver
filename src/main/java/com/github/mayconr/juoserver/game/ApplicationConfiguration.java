@@ -13,6 +13,9 @@ import com.github.mayconr.juoserver.game.core.event.DefaultEventBus;
 import com.github.mayconr.juoserver.game.core.event.EventBus;
 import com.github.mayconr.juoserver.game.core.gameloop.DefaultGameLoop;
 import com.github.mayconr.juoserver.game.core.gameloop.GameLoop;
+import com.github.mayconr.juoserver.game.core.gump.DefaultHandlerGumpSystem;
+import com.github.mayconr.juoserver.game.core.gump.GumpSystemCallback;
+import com.github.mayconr.juoserver.game.core.gump.GumpSystem;
 import com.github.mayconr.juoserver.game.core.prototype.PrototypeConfiguration;
 import com.github.mayconr.juoserver.game.core.session.game.DefaultGameSession;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
@@ -73,6 +76,11 @@ public class ApplicationConfiguration {
         return combatSystem;
     }
 
+    @Bean
+    public GumpSystem gumpSystem(ChannelGroup channelGroup) {
+        return new DefaultHandlerGumpSystem(channelGroup);
+    }
+
     // ========= Session Factory / Core Game Session =========
 
     @Bean
@@ -104,7 +112,8 @@ public class ApplicationConfiguration {
     @Bean
     public List<SimpleChannelInboundHandler<?>> packetHandlers(
             Database database,
-            GameSession gameSession
+            GameSession gameSession,
+            GumpSystemCallback gumpSystemCallback
     ) {
         return List.of(
                 new GameServerLoginHandler(database),
@@ -126,7 +135,8 @@ public class ApplicationConfiguration {
                 new GetPlayerStatusHandler(),
                 new RequestHelpHandler(),
                 new RequestWarModeHandler(),
-                new AttackRequestHandler()
+                new AttackRequestHandler(),
+                new GumpSelectionHandler(gumpSystemCallback)
         );
     }
 

@@ -1,12 +1,11 @@
 package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
-import com.github.mayconr.juoserver.game.core.model.UOPlayer;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
 import io.netty.buffer.ByteBuf;
 import io.netty.util.CharsetUtil;
 
-import java.nio.charset.Charset;
+import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
@@ -14,62 +13,90 @@ import java.util.Objects;
 public class SendGumpDialog extends AbstractPacket {
 
     public static final int CODE = 0xB0;
-    private final UOPlayer player;
+    private final UOMobile mobile;
     private final int gumpId;
     private final int x;
     private final int y;
     private final String layout;        // ex: "page 0\nresizepic 0 0 5054 200 150\nbutton 20 20 4005 4007 1 0 1\ntext 50 50 0 0"
     private final List<String> texts;   // textos referenciados pelo layout (indices 0..N-1)
 
-    public SendGumpDialog(UOPlayer player, int gumpId, int x, int y, String layout, List<String> texts) {
+    public SendGumpDialog(UOMobile mobile, int gumpId, int x, int y, String layout, List<String> texts) {
         super(CODE, computeLength(Objects.requireNonNull(layout), Objects.requireNonNull(texts)));
-        this.player = Objects.requireNonNull(player);
+        this.mobile = Objects.requireNonNull(mobile);
         this.gumpId = gumpId;
         this.x = x;
         this.y = y;
-        this.layout = layout;
-        this.texts = texts;
+        this.layout = Objects.requireNonNull(layout);
+        this.texts = Objects.requireNonNull(texts);
     }
 
+    /**
+     * Calcula o tamanho total do pacote (incluindo opcode e length).
+     */
     private static int computeLength(String layout, List<String> texts) {
-        // opcode(1) + size(2) + sender(4) + gumpId(4) + x(4) + y(4) + cmdLen(2)
+        Objects.requireNonNull(layout);
+        Objects.requireNonNull(texts);
+
+        // opcode(1) + size(2) + sender(4) + gumpId(4) + x(4) + y(4)
+        // + cmdLen(2)
         int len = 1 + 2 + 4 + 4 + 4 + 4 + 2;
 
-        // layout ASCII (sem 0-terminator)
-        int layoutBytes = layout.getBytes(CharsetUtil.US_ASCII).length;
-        len += layoutBytes;
+        byte[] layoutBytes = layout.getBytes(CharsetUtil.US_ASCII);
+        if (layoutBytes.length > 0xFFFF) {
+            throw new IllegalArgumentException("Layout excede 65535 bytes");
+        }
+        len += layoutBytes.length;
 
         // textLinesCount (2)
+        if (texts.size() > 0xFFFF) {
+            throw new IllegalArgumentException("Quantidade de textos excede ushort");
+        }
         len += 2;
 
-        // cada linha: length(2) em chars + dados UTF-16BE (2 bytes por char)
+        // textos Unicode
         for (String s : texts) {
-            len += 2;               // length (chars)
-            len += s.length() * 2;  // dados
+            Objects.requireNonNull(s);
+
+            byte[] utf16 = s.getBytes(StandardCharsets.UTF_16BE);
+            int charCount = utf16.length / 2;
+
+            if (charCount > 0xFFFF) {
+                throw new IllegalArgumentException("Texto Unicode excede ushort");
+            }
+
+            // length(2) + dados UTF-16BE
+            len += 2 + utf16.length;
         }
+
         return len;
     }
 
     @Override
     public void writesTo(ByteBuf buf) {
+        // Garantia explícita de BIG-ENDIAN
+        buf = buf.order(ByteOrder.BIG_ENDIAN);
+
+        // opcode + tamanho
         buf.writeByte(CODE);
         buf.writeShort(getLength());
 
-        buf.writeInt(player.getSerialId()); // sender (UInt32 BE)
-        buf.writeInt(gumpId);               // gumpID
-        buf.writeInt(x);                    // x
-        buf.writeInt(y);                    // y
+        // cabeçalho
+        buf.writeInt(mobile.getSerialId()); // serial UO do mobile
+        buf.writeInt(gumpId);
+        buf.writeInt(x);
+        buf.writeInt(y);
 
-        // layout
+        // layout (cmd)
         byte[] cmd = layout.getBytes(CharsetUtil.US_ASCII);
-        buf.writeShort(cmd.length); // cmdLen (ushort)
-        buf.writeBytes(cmd);        // sem terminador
+        buf.writeShort(cmd.length);
+        buf.writeBytes(cmd);
 
         // textos
-        buf.writeShort(texts.size()); // textLinesCount
+        buf.writeShort(texts.size());
         for (String s : texts) {
-            buf.writeShort(s.length());          // length em chars
-            buf.writeBytes(s.getBytes(StandardCharsets.UTF_16BE)); // UTF-16BE, sem terminador
+            byte[] utf16 = s.getBytes(StandardCharsets.UTF_16BE);
+            buf.writeShort(utf16.length / 2); // número real de chars
+            buf.writeBytes(utf16);
         }
     }
 }

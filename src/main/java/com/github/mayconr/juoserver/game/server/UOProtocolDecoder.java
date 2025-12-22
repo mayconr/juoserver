@@ -40,6 +40,7 @@ public class UOProtocolDecoder extends ByteToMessageDecoder {
         packetsClass.put(RequestHelp.CODE, RequestHelp.class);
         packetsClass.put(RequestWarMode.CODE, RequestWarMode.class);
         packetsClass.put(AttackRequest.CODE, AttackRequest.class);
+        packetsClass.put(GumpSelection.CODE, GumpSelection.class);
     }
 
     @Override
