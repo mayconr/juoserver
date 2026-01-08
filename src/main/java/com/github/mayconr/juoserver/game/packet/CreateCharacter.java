@@ -1,10 +1,11 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
 
 public class CreateCharacter extends AbstractPacket {
 
@@ -33,7 +34,6 @@ public class CreateCharacter extends AbstractPacket {
     private short shirtColor;
     private short pantsColor;
 
-
     public CreateCharacter(ByteBuf buf) {
         super(CODE, 104);
         buf.readByte(); // CODE
@@ -43,7 +43,7 @@ public class CreateCharacter extends AbstractPacket {
         this.characterName = readStringTrailingZeros(buf, 30, StandardCharsets.UTF_8);
         buf.readBytes(2); // unknown0
         buf.readInt(); // flag
-        buf.readBytes(4); //unknown1
+        buf.readBytes(4); // unknown1
         this.loginCount = buf.readInt();
         this.profession = buf.readByte();
         buf.readBytes(15); // unknown2
@@ -63,7 +63,7 @@ public class CreateCharacter extends AbstractPacket {
         this.beardStyle = buf.readShort();
         this.beardColor = buf.readShort();
         this.locationIndex = buf.readShort();
-        buf.readBytes(2); //unknown3
+        buf.readBytes(2); // unknown3
         this.slot = buf.readShort();
         this.clientIp = readInetAddress(buf);
         this.shirtColor = buf.readShort();
@@ -164,8 +164,6 @@ public class CreateCharacter extends AbstractPacket {
 
     @Override
     public String toString() {
-        return "CreateCharacter{" +
-                "characterName='" + characterName + '\'' +
-                '}';
+        return "CreateCharacter{" + "characterName='" + characterName + '\'' + '}';
     }
 }

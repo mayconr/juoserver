@@ -1,12 +1,13 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import java.util.Map;
+
 import com.github.mayconr.juoserver.game.core.model.Layer;
 import com.github.mayconr.juoserver.game.core.model.UOItem;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
 
-import java.util.Map;
+import io.netty.buffer.ByteBuf;
 
 public class DrawMobile extends AbstractPacket {
 

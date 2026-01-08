@@ -1,5 +1,8 @@
 package com.github.mayconr.juoserver.game.core.session.game;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.core.event.EventBus;
 import com.github.mayconr.juoserver.game.core.event.NpcSessionCreated;
@@ -12,13 +15,11 @@ import com.github.mayconr.juoserver.game.core.session.player.DefaultPlayerSessio
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSessionFactory;
 import com.github.mayconr.juoserver.game.packet.DrawMobile;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -53,31 +54,42 @@ public class DefaultGameSession implements GameSession {
     public NpcSession createNpcSession(String name, Location location) {
         final var npc = database.createNpcAtLocation(name, location);
         try {
-            final var session = npcNpcSessionMap.putIfAbsent(npc, npcSessionFactory.create(this, npc));
+            final var session =
+                    npcNpcSessionMap.putIfAbsent(npc, npcSessionFactory.create(this, npc));
             channelGroup.writeAndFlush(new DrawMobile(npc));
             eventBus.publish(new NpcSessionCreated(session));
             return session;
         } catch (Exception e) {
-            throw new IllegalStateException("Unable to create AI for ["+npc.getAi()+"]", e);
+            throw new IllegalStateException("Unable to create AI for [" + npc.getAi() + "]", e);
         }
     }
 
     @Override
     public PlayerSession createPlayerSession(UOPlayer player, ChannelHandlerContext ctx) {
-        return playerSessionMap.computeIfAbsent(player, pl -> {
-            final var session = (DefaultPlayerSession) playerSessionFactory.createPlayerSession(pl, ctx);
-            ctx.channel().closeFuture().addListener(future -> {
-                session.setActive(false);
-                playerSessionMap.remove(pl);
-                eventBus.publish(new PlayerSessionClosed(session));
-                log.info("Session closed for mobile [{}-{}]", pl.getSerialId(), pl.getName());
-            });
-            session.setActive(true);
+        return playerSessionMap.computeIfAbsent(
+                player,
+                pl -> {
+                    final var session =
+                            (DefaultPlayerSession)
+                                    playerSessionFactory.createPlayerSession(pl, ctx);
+                    ctx.channel()
+                            .closeFuture()
+                            .addListener(
+                                    future -> {
+                                        session.setActive(false);
+                                        playerSessionMap.remove(pl);
+                                        eventBus.publish(new PlayerSessionClosed(session));
+                                        log.info(
+                                                "Session closed for mobile [{}-{}]",
+                                                pl.getSerialId(),
+                                                pl.getName());
+                                    });
+                    session.setActive(true);
 
-            eventBus.publish(new PlayerSessionCreated(session));
+                    eventBus.publish(new PlayerSessionCreated(session));
 
-            return session;
-        });
+                    return session;
+                });
     }
 
     @Override

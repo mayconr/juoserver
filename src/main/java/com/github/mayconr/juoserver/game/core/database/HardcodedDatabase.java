@@ -1,15 +1,15 @@
 package com.github.mayconr.juoserver.game.core.database;
 
-import com.github.mayconr.juoserver.game.core.model.*;
-import com.github.mayconr.juoserver.game.core.prototype.ItemPrototype;
-import com.github.mayconr.juoserver.game.core.prototype.PrototypeManager;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.github.mayconr.juoserver.game.core.model.*;
+import com.github.mayconr.juoserver.game.core.prototype.ItemPrototype;
+import com.github.mayconr.juoserver.game.core.prototype.PrototypeManager;
 
 public class HardcodedDatabase implements Database {
 
@@ -35,8 +35,25 @@ public class HardcodedDatabase implements Database {
         final var admin = new UOAccount(UUID.randomUUID().toString(), "admin", "admin");
         ACCOUNTS.add(admin);
 
-        final var elrond = new UOPlayer(MOBILE_COUNTER.getAndIncrement(), 0x190, 2514,550,0, "Elrond", Direction.NORTH,0x83EA,CharacterStatus.NORMAL,Notoriety.CRIMINAL,admin.getId(),"admin");
-        final var elrondBackpack = new UOContainer(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemByName("backpack").orElseThrow(), new PointInTheWorld(0,0,0));
+        final var elrond =
+                new UOPlayer(
+                        MOBILE_COUNTER.getAndIncrement(),
+                        0x190,
+                        2514,
+                        550,
+                        0,
+                        "Elrond",
+                        Direction.NORTH,
+                        0x83EA,
+                        CharacterStatus.NORMAL,
+                        Notoriety.CRIMINAL,
+                        admin.getId(),
+                        "admin");
+        final var elrondBackpack =
+                new UOContainer(
+                        OBJECT_COUNTER.getAndIncrement(),
+                        prototypeManager.getItemByName("backpack").orElseThrow(),
+                        new PointInTheWorld(0, 0, 0));
         elrond.setBackpack(elrondBackpack);
         equipItem(elrond, Layer.OUTER_TORSO, "robe2");
         OBJECTS.add(elrondBackpack);
@@ -45,13 +62,30 @@ public class HardcodedDatabase implements Database {
         final var user = new UOAccount(UUID.randomUUID().toString(), "user", "user");
         ACCOUNTS.add(user);
 
-        final var legolaz = new UOPlayer(MOBILE_COUNTER.getAndIncrement(), 0x190, 2514,550,0, "Legolaz", Direction.NORTH,0x83EA,CharacterStatus.NORMAL,Notoriety.CRIMINAL,user.getId(),"admin");
+        final var legolaz =
+                new UOPlayer(
+                        MOBILE_COUNTER.getAndIncrement(),
+                        0x190,
+                        2514,
+                        550,
+                        0,
+                        "Legolaz",
+                        Direction.NORTH,
+                        0x83EA,
+                        CharacterStatus.NORMAL,
+                        Notoriety.CRIMINAL,
+                        user.getId(),
+                        "admin");
         legolaz.setStrength(10);
         legolaz.setDexterity(20);
         legolaz.setMana(11);
         legolaz.setStamina(100);
         legolaz.setMaxStamina(120);
-        final var backpack = new UOContainer(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemByName("backpack").orElseThrow(), new PointInTheWorld(0,0,0));
+        final var backpack =
+                new UOContainer(
+                        OBJECT_COUNTER.getAndIncrement(),
+                        prototypeManager.getItemByName("backpack").orElseThrow(),
+                        new PointInTheWorld(0, 0, 0));
         legolaz.setBackpack(backpack);
         equipItem(legolaz, Layer.OUTER_TORSO, "robe");
         OBJECTS.add(backpack);
@@ -59,20 +93,28 @@ public class HardcodedDatabase implements Database {
     }
 
     private void equipItem(UOMobile mobile, Layer layer, String name) {
-        final var item = new UOItem(OBJECT_COUNTER.getAndIncrement(), prototypeManager.getItemByName(name).orElseThrow(), new PointInTheWorld(0,0,0));
+        final var item =
+                new UOItem(
+                        OBJECT_COUNTER.getAndIncrement(),
+                        prototypeManager.getItemByName(name).orElseThrow(),
+                        new PointInTheWorld(0, 0, 0));
         OBJECTS.add(item);
         mobile.equipItem(layer, item);
     }
 
     @Override
     public Optional<UOAccount> getAccount(String username, String password) {
-        return ACCOUNTS.stream().filter(acct->acct.getUsername().equals(username) && acct.getPassword().equals(password))
+        return ACCOUNTS.stream()
+                .filter(
+                        acct ->
+                                acct.getUsername().equals(username)
+                                        && acct.getPassword().equals(password))
                 .findFirst();
     }
 
     @Override
     public Optional<UOAccount> getAccount(String accountId) {
-        return ACCOUNTS.stream().filter(acct->acct.getId().equals(accountId)).findFirst();
+        return ACCOUNTS.stream().filter(acct -> acct.getId().equals(accountId)).findFirst();
     }
 
     @Override
@@ -99,27 +141,31 @@ public class HardcodedDatabase implements Database {
     @Override
     public Optional<Container> getContainerById(int serialId) {
         if (isMobile(serialId)) {
-            return getMobileSerialId(serialId)
-                    .map(mobile-> mobile);
+            return getMobileSerialId(serialId).map(mobile -> mobile);
         }
         return getItemBySerialId(serialId)
-                .filter(item->ItemType.CONTAINER.equals(item.getType()))
-                .map(item->(Container) item);
+                .filter(item -> ItemType.CONTAINER.equals(item.getType()))
+                .map(item -> (Container) item);
     }
 
     @Override
     public List<UOCity> getCities() {
-        return List.of(new UOCity("Vesper", "Vesper", new PointInTheWorld(2893, 686, 0)),
-                new UOCity("Britain", "Britannia", new PointInTheWorld(1478,1711,0)));
+        return List.of(
+                new UOCity("Vesper", "Vesper", new PointInTheWorld(2893, 686, 0)),
+                new UOCity("Britain", "Britannia", new PointInTheWorld(1478, 1711, 0)));
     }
 
     @Override
     public Stream<UOMobile> getMobilesInRange(Location location, MobileFilter filter) {
         return MOBILES.stream()
-                .filter(mobile-> switch (filter) {
-                    case ALL -> true;
-                    case ALL_VISIBLE -> (mobile instanceof UOPlayer player && player.isConnected()) || mobile instanceof UONpc;
-                });
+                .filter(
+                        mobile ->
+                                switch (filter) {
+                                    case ALL -> true;
+                                    case ALL_VISIBLE -> (mobile instanceof UOPlayer player
+                                                    && player.isConnected())
+                                            || mobile instanceof UONpc;
+                                });
     }
 
     @Override
@@ -129,15 +175,30 @@ public class HardcodedDatabase implements Database {
 
     @Override
     public UOPlayer createPlayer(PlayerDetails details) {
-        final var mobile = new UOPlayer(MOBILE_COUNTER.getAndIncrement(), 0x190, 2514,550,0, details.name(), Direction.NORTH, 0x83EA, CharacterStatus.NORMAL, Notoriety.INNOCENT, details.account().getId(), "temp");
+        final var mobile =
+                new UOPlayer(
+                        MOBILE_COUNTER.getAndIncrement(),
+                        0x190,
+                        2514,
+                        550,
+                        0,
+                        details.name(),
+                        Direction.NORTH,
+                        0x83EA,
+                        CharacterStatus.NORMAL,
+                        Notoriety.INNOCENT,
+                        details.account().getId(),
+                        "temp");
         MOBILES.add(mobile);
         return mobile;
     }
 
     @Override
     public UONpc createNpcAtLocation(String name, Location location) {
-        final var npcPrototype = prototypeManager.getNpcByName(name)
-                .orElseThrow(()->new NpcPrototypeNotFoundException(name));
+        final var npcPrototype =
+                prototypeManager
+                        .getNpcByName(name)
+                        .orElseThrow(() -> new NpcPrototypeNotFoundException(name));
         final var npc = new UONpc(MOBILE_COUNTER.getAndIncrement(), npcPrototype, location);
         for (Map.Entry<Layer, String> entry : npcPrototype.getEquippedItems().entrySet()) {
             npc.equipItem(entry.getKey(), createItem(entry.getValue()));
@@ -148,30 +209,37 @@ public class HardcodedDatabase implements Database {
 
     @Override
     public UOItem createItemOnTheGround(String name, Location location) {
-        final var prototype = prototypeManager.getItemByName(name)
-                .orElseThrow(()->new ItemPrototypeNotFoundException(name));
+        final var prototype =
+                prototypeManager
+                        .getItemByName(name)
+                        .orElseThrow(() -> new ItemPrototypeNotFoundException(name));
         final var item = createItemByPrototype(prototype, location);
 
         // geo index
         final var blockX = item.getX() / 24;
         final var blockY = item.getY() / 24;
         final var key = regionKey(blockX, blockY);
-        GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)))
+        GROUNDED_ITEMS
+                .computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)))
                 .add(item);
         return item;
     }
 
     @Override
     public UOItem createItem(String name) {
-        final var prototype = prototypeManager.getItemByName(name)
-                .orElseThrow(()->new ItemPrototypeNotFoundException(name));
-        return createItemByPrototype(prototype, new PointInTheWorld(0,0, 0));
+        final var prototype =
+                prototypeManager
+                        .getItemByName(name)
+                        .orElseThrow(() -> new ItemPrototypeNotFoundException(name));
+        return createItemByPrototype(prototype, new PointInTheWorld(0, 0, 0));
     }
 
     @Override
     public UOItem createItem(String name, Location location) {
-        final var prototype = prototypeManager.getItemByName(name)
-                .orElseThrow(()->new ItemPrototypeNotFoundException(name));
+        final var prototype =
+                prototypeManager
+                        .getItemByName(name)
+                        .orElseThrow(() -> new ItemPrototypeNotFoundException(name));
         return createItemByPrototype(prototype, location);
     }
 
@@ -191,7 +259,9 @@ public class HardcodedDatabase implements Database {
         int blockX = item.getX() / 24;
         int blockY = item.getY() / 24;
         long key = regionKey(blockX, blockY);
-        List<UOItem> items = GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
+        List<UOItem> items =
+                GROUNDED_ITEMS.computeIfAbsent(
+                        key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
         synchronized (items) {
             items.add(item);
         }
@@ -202,7 +272,9 @@ public class HardcodedDatabase implements Database {
         int blockX = item.getX() / 24;
         int blockY = item.getY() / 24;
         long key = regionKey(blockX, blockY);
-        List<UOItem> items = GROUNDED_ITEMS.computeIfAbsent(key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
+        List<UOItem> items =
+                GROUNDED_ITEMS.computeIfAbsent(
+                        key, aLong -> Collections.synchronizedList(new ArrayList<>(10)));
         synchronized (items) {
             items.remove(item);
         }
@@ -213,9 +285,9 @@ public class HardcodedDatabase implements Database {
         final int blockX = location.getX() / 24;
         final int blockY = location.getY() / 24;
         final List<UOItem> items = new ArrayList<>(90);
-        for (int x=-1; x<=1; x++) {
-            for (int y=-1; y<=1; y++) {
-                final long key =regionKey(blockX + x, blockY + y);
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                final long key = regionKey(blockX + x, blockY + y);
                 final var partialItems = GROUNDED_ITEMS.get(key);
                 if (partialItems != null && !partialItems.isEmpty()) {
                     items.addAll(partialItems);

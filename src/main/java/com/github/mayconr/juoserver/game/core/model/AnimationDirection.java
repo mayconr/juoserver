@@ -10,5 +10,4 @@ public enum AnimationDirection {
     BACKWARD(0X01);
 
     private final int code;
-
 }

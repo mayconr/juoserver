@@ -4,6 +4,7 @@ import com.github.mayconr.juoserver.game.core.model.Layer;
 import com.github.mayconr.juoserver.game.core.model.UOItem;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 
 public class EquipItem extends AbstractPacket {

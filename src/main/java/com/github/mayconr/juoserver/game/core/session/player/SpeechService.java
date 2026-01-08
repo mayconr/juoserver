@@ -6,6 +6,7 @@ import com.github.mayconr.juoserver.game.core.event.Prompt;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.packet.SendSpeech;
 import com.github.mayconr.juoserver.game.packet.UnicodeSpeachRequest;
+
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
 

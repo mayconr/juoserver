@@ -1,8 +1,8 @@
 package com.github.mayconr.juoserver.game.core.event;
 
-import com.github.mayconr.juoserver.game.core.model.UOMobile;
-
 import java.util.ArrayList;
+
+import com.github.mayconr.juoserver.game.core.model.UOMobile;
 
 public record Prompt(UOMobile mobile, String name, String[] arguments) implements GameEvent {
 
@@ -20,7 +20,6 @@ public record Prompt(UOMobile mobile, String name, String[] arguments) implement
         final var commandName = result.get(0).substring(1);
         result.remove(0);
 
-        return new Prompt(mobile, commandName, result.toArray(new String[]{}));
+        return new Prompt(mobile, commandName, result.toArray(new String[] {}));
     }
-
 }

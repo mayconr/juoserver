@@ -7,6 +7,7 @@ import com.github.mayconr.juoserver.game.core.event.MobileMove;
 import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.core.model.UOPlayer;
 import com.github.mayconr.juoserver.game.packet.*;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
@@ -31,13 +32,13 @@ class MovementService {
 
         ctx.write(new MovementAck(moveRequest.getSequence(), player.getNotoriety()));
         database.getMobilesInRange(player, MobileFilter.ALL_VISIBLE)
-                .filter(someone->!someone.equals(player)) // avoid unnecessary packet
-                .forEach(someone->ctx.write(new DrawMobile(someone)));
-        database.getItemsInRange(player)
-                .forEach(item->ctx.write(new ObjectInfo(item)));
+                .filter(someone -> !someone.equals(player)) // avoid unnecessary packet
+                .forEach(someone -> ctx.write(new DrawMobile(someone)));
+        database.getItemsInRange(player).forEach(item -> ctx.write(new ObjectInfo(item)));
         ctx.flush();
-        channelGroup.writeAndFlush(new UpdatePlayer(player), channel -> !channel.equals(ctx.channel())); // TODO only for close mobiles
-
+        channelGroup.writeAndFlush(
+                new UpdatePlayer(player),
+                channel -> !channel.equals(ctx.channel())); // TODO only for close mobiles
 
         eventBus.publish(new MobileMove(player, direction));
     }
@@ -46,8 +47,8 @@ class MovementService {
         player.setLocation(location.getX(), location.getY(), location.getZ());
         ctx.write(new DrawGamePlayer(player));
         database.getMobilesInRange(player, MobileFilter.ALL_VISIBLE)
-                .filter(someone->!someone.equals(player)) // avoid unnecessary packet
-                .forEach(someone->ctx.write(new DrawMobile(someone)));
+                .filter(someone -> !someone.equals(player)) // avoid unnecessary packet
+                .forEach(someone -> ctx.write(new DrawMobile(someone)));
         ctx.flush();
         channelGroup.writeAndFlush(new UpdatePlayer(player)); // TODO only for close mobiles
     }

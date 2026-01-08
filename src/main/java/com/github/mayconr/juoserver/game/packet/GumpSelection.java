@@ -1,13 +1,14 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
+import lombok.Getter;
+import lombok.ToString;
 
 @ToString
 @Getter
@@ -21,9 +22,7 @@ public class GumpSelection extends AbstractPacket {
     private final List<Integer> switches = new ArrayList<>();
     private final List<String> textEntries = new ArrayList<>();
 
-    /**
-     * Packet recebido do cliente
-     */
+    /** Packet recebido do cliente */
     public GumpSelection(ByteBuf buf) {
         super(CODE, calculateLength(buf));
 
@@ -47,9 +46,10 @@ public class GumpSelection extends AbstractPacket {
         for (int i = 0; i < textCount; i++) {
             buf.readUnsignedShort(); // Unused
             final var len = buf.readUnsignedShort();
-            final var text = len > 0
-                    ? buf.readCharSequence(len * 2, StandardCharsets.UTF_16BE).toString()
-                    : "";
+            final var text =
+                    len > 0
+                            ? buf.readCharSequence(len * 2, StandardCharsets.UTF_16BE).toString()
+                            : "";
             textEntries.add(text);
         }
     }

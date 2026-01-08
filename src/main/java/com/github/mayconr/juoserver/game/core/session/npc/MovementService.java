@@ -1,13 +1,14 @@
 package com.github.mayconr.juoserver.game.core.session.npc;
 
+import java.util.Collections;
+
 import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.Location;
 import com.github.mayconr.juoserver.game.core.model.UONpc;
 import com.github.mayconr.juoserver.game.packet.DrawMobile;
+
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Collections;
 
 @RequiredArgsConstructor
 public class MovementService {
@@ -22,9 +23,9 @@ public class MovementService {
 
     public void move(Location location) {
         var map = new boolean[2600][600];
-        for (int x = 0; x<2600; x++) {
-            for (int y=0; y<600; y++) {
-                map[x][y] = x >= 2512 && x<= 2518 && y>=442 && y<=550;
+        for (int x = 0; x < 2600; x++) {
+            for (int y = 0; y < 600; y++) {
+                map[x][y] = x >= 2512 && x <= 2518 && y >= 442 && y <= 550;
             }
         }
         try {
@@ -32,7 +33,8 @@ public class MovementService {
             pathfinder.findNextDirection(npc, location).ifPresent(npc::move);
             channelGroup.writeAndFlush(new DrawMobile(npc));
         } catch (Exception exception) {
-            exception.printStackTrace();;
+            exception.printStackTrace();
+            ;
         }
     }
 }

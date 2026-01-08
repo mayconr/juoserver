@@ -2,6 +2,7 @@ package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.core.model.WarModeType;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 

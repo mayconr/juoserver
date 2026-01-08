@@ -8,6 +8,7 @@ import com.github.mayconr.juoserver.game.packet.DeleteObject;
 import com.github.mayconr.juoserver.game.packet.DrawGamePlayer;
 import com.github.mayconr.juoserver.game.packet.DrawMobile;
 import com.github.mayconr.juoserver.game.packet.EquipItem;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
@@ -33,11 +34,12 @@ public class MountService {
 
     public void handleMount(String mount) {
         if (player.getEquippedItems().get(Layer.MOUNT) != null) {
-            throw new IllegalStateException("Player "+player.getName()+" already mounted");
+            throw new IllegalStateException("Player " + player.getName() + " already mounted");
         }
-        final var item =  database.createItem(mount, player);
+        final var item = database.createItem(mount, player);
         player.equipItem(Layer.MOUNT, item);
-        channelGroup.writeAndFlush(new EquipItem(player, Layer.MOUNT, item)); // TODO filter by channels in range
+        channelGroup.writeAndFlush(
+                new EquipItem(player, Layer.MOUNT, item)); // TODO filter by channels in range
     }
 
     public void handleUnmount() {

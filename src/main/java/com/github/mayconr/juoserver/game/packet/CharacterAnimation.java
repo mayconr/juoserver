@@ -5,6 +5,7 @@ import com.github.mayconr.juoserver.game.core.model.AnimationRepeat;
 import com.github.mayconr.juoserver.game.core.model.AnimationType;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 
 public class CharacterAnimation extends AbstractPacket {
@@ -16,7 +17,12 @@ public class CharacterAnimation extends AbstractPacket {
     private int frameCount;
     private AnimationDirection direction;
 
-    public CharacterAnimation(UOMobile mobile, AnimationRepeat repeat, AnimationType type, int frameCount, AnimationDirection direction) {
+    public CharacterAnimation(
+            UOMobile mobile,
+            AnimationRepeat repeat,
+            AnimationType type,
+            int frameCount,
+            AnimationDirection direction) {
         super(CODE, 14);
         this.serialId = mobile.getSerialId();
         this.repeat = repeat;
@@ -25,7 +31,12 @@ public class CharacterAnimation extends AbstractPacket {
         this.direction = direction;
     }
 
-    public CharacterAnimation(int serialId, AnimationRepeat repeat, AnimationType type, int frameCount, AnimationDirection direction) {
+    public CharacterAnimation(
+            int serialId,
+            AnimationRepeat repeat,
+            AnimationType type,
+            int frameCount,
+            AnimationDirection direction) {
         super(CODE, 14);
         this.serialId = serialId;
         this.repeat = repeat;

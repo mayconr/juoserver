@@ -1,9 +1,10 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-
 import java.nio.charset.StandardCharsets;
+
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
 
 public class GameServerLogin extends AbstractPacket {
 

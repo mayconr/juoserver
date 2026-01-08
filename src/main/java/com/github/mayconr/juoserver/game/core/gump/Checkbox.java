@@ -27,9 +27,12 @@ class Checkbox implements UIElement, Sized {
     }
 
     @Override
-    public int getWidth() { return 20; }
+    public int getWidth() {
+        return 20;
+    }
 
     @Override
-    public int getHeight() { return 20; }
+    public int getHeight() {
+        return 20;
+    }
 }
-

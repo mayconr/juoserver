@@ -1,15 +1,17 @@
 package com.github.mayconr.juoserver.game.server;
 
+import java.util.HexFormat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.github.mayconr.juoserver.game.packet.Packet;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HexFormat;
 
 @ChannelHandler.Sharable
 public class UOProtocolEncoder extends MessageToByteEncoder<Packet> {
@@ -31,7 +33,11 @@ public class UOProtocolEncoder extends MessageToByteEncoder<Packet> {
 
         if (LOGGER.isDebugEnabled()) {
             final var hex = HexFormat.ofDelimiter(" ");
-            LOGGER.debug("Packet sent [Code: 0x{} - Content: {}] - Length {} ", hex.formatHex(new byte[]{(byte) msg.getCode()}).toUpperCase(), hex.formatHex(plainBytes).toUpperCase(), plainBytes.length);
+            LOGGER.debug(
+                    "Packet sent [Code: 0x{} - Content: {}] - Length {} ",
+                    hex.formatHex(new byte[] {(byte) msg.getCode()}).toUpperCase(),
+                    hex.formatHex(plainBytes).toUpperCase(),
+                    plainBytes.length);
         }
     }
 }

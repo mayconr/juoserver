@@ -1,14 +1,15 @@
 package com.github.mayconr.juoserver.game.server;
 
-import com.github.mayconr.juoserver.game.packet.Packet;
-import io.netty.buffer.ByteBuf;
-
 import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+
+import com.github.mayconr.juoserver.game.packet.Packet;
+
+import io.netty.buffer.ByteBuf;
 
 public abstract class AbstractPacket implements Packet {
 
@@ -38,7 +39,7 @@ public abstract class AbstractPacket implements Packet {
         var tempBuffer = byteBuf.readBytes(length);
         int end = tempBuffer.writerIndex() - 1;
         while (end >= tempBuffer.readerIndex() && tempBuffer.getByte(end) == 0) {
-            end --;
+            end--;
         }
         int newLength = end - tempBuffer.readerIndex() + 1;
 

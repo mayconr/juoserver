@@ -12,31 +12,25 @@ public class Row implements UIElement {
         this.children = children;
     }
 
-    public Row(List<UIElement> children) {
-        this(0, children);
-    }
-
     @Override
     public void layout(LayoutContext ctx) {
-        int cursorX = ctx.x;
-        int baseY = ctx.y;
+
+        int y = ctx.y;
 
         for (UIElement child : children) {
 
-            int childWidth = 0;
-            int childHeight = 0;
+            int height = 0;
 
             if (child instanceof Sized s) {
-                childWidth = s.getWidth();
-                childHeight = s.getHeight();
+                height = s.getHeight();
+            } else {
+                height = 48; // altura padrão de campo
             }
 
-            LayoutContext childCtx =
-                    new LayoutContext(cursorX, baseY, childWidth, childHeight);
+            LayoutContext childCtx = new LayoutContext(ctx.x, y, ctx.width, height);
 
             child.layout(childCtx);
-
-            cursorX += childWidth + gap;
+            y += height + gap;
         }
     }
 

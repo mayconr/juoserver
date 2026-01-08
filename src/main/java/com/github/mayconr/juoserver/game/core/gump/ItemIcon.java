@@ -1,18 +1,11 @@
 package com.github.mayconr.juoserver.game.core.gump;
 
-class ItemIcon implements UIElement, Sized {
-
-    private final int artId;
-    private final int hue;
+public class ItemIcon implements UIElement, Sized {
     private int x, y;
+    private final int tileId;
 
-    ItemIcon(int artId, int hue) {
-        this.artId = artId;
-        this.hue = hue;
-    }
-
-    ItemIcon(int artId) {
-        this(artId, 0);
+    public ItemIcon(int tileId) {
+        this.tileId = tileId;
     }
 
     @Override
@@ -23,13 +16,16 @@ class ItemIcon implements UIElement, Sized {
 
     @Override
     public void render(GumpBuilder g) {
-        g.gumpPic(x, y, artId, hue);
+        g.tilePic(x, y, tileId);
     }
 
     @Override
-    public int getWidth() { return 44; }
+    public int getWidth() {
+        return 30;
+    }
 
     @Override
-    public int getHeight() { return 44; }
+    public int getHeight() {
+        return 30;
+    }
 }
-

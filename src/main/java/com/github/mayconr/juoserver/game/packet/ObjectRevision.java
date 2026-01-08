@@ -2,9 +2,8 @@ package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.core.model.UOItem;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
+import io.netty.buffer.ByteBuf;
 
 public class ObjectRevision extends AbstractPacket {
 

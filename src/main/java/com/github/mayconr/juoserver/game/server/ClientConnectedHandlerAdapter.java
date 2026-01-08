@@ -1,16 +1,18 @@
 package com.github.mayconr.juoserver.game.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.group.ChannelGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ChannelHandler.Sharable
 public class ClientConnectedHandlerAdapter extends ChannelInboundHandlerAdapter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ClientConnectedHandlerAdapter.class);
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(ClientConnectedHandlerAdapter.class);
     private final ChannelGroup channelGroup;
 
     public ClientConnectedHandlerAdapter(ChannelGroup channelGroup) {
@@ -23,7 +25,6 @@ public class ClientConnectedHandlerAdapter extends ChannelInboundHandlerAdapter 
         channelGroup.add(ctx.channel());
         final var remoteAddress = ctx.channel().remoteAddress();
         LOGGER.info("New connection from: " + remoteAddress);
-
     }
 
     @Override

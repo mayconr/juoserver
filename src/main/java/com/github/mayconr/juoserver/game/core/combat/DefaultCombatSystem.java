@@ -1,18 +1,19 @@
 package com.github.mayconr.juoserver.game.core.combat;
 
-import com.github.mayconr.juoserver.game.core.gameloop.IntervalGameTask;
-import com.github.mayconr.juoserver.game.core.model.AnimationDirection;
-import com.github.mayconr.juoserver.game.core.model.AnimationRepeat;
-import com.github.mayconr.juoserver.game.core.model.AnimationType;
-import com.github.mayconr.juoserver.game.packet.CharacterAnimation;
-import io.netty.channel.group.ChannelGroup;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
+
+import com.github.mayconr.juoserver.game.core.gameloop.IntervalGameTask;
+import com.github.mayconr.juoserver.game.core.model.AnimationDirection;
+import com.github.mayconr.juoserver.game.core.model.AnimationRepeat;
+import com.github.mayconr.juoserver.game.core.model.AnimationType;
+import com.github.mayconr.juoserver.game.packet.CharacterAnimation;
+
+import io.netty.channel.group.ChannelGroup;
 
 public class DefaultCombatSystem extends IntervalGameTask implements CombatSystem {
 
@@ -54,7 +55,13 @@ public class DefaultCombatSystem extends IntervalGameTask implements CombatSyste
             final var entry = it.next();
             final var state = entry.getValue();
 
-            channelGroup.writeAndFlush(new CharacterAnimation(state.getAttackerId(), AnimationRepeat.ONCE, AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE, 100, AnimationDirection.FORWARD));
+            channelGroup.writeAndFlush(
+                    new CharacterAnimation(
+                            state.getAttackerId(),
+                            AnimationRepeat.ONCE,
+                            AnimationType.ATTACK_WITH_SWORD_OVER_AND_SIDE,
+                            100,
+                            AnimationDirection.FORWARD));
 
             if (!state.isAutoSwing()) {
                 it.remove();
@@ -64,15 +71,22 @@ public class DefaultCombatSystem extends IntervalGameTask implements CombatSyste
     }
 
     public interface CombatCommand {
-        void apply(Map<Integer, CombatState> combatStateMap, ConcurrentMap<Integer, Boolean> attackingIndex);
+        void apply(
+                Map<Integer, CombatState> combatStateMap,
+                ConcurrentMap<Integer, Boolean> attackingIndex);
     }
 
     private record RequestAttack(int attackerId, int targetId) implements CombatCommand {
         @Override
-        public void apply(Map<Integer, CombatState> combatStateMap, ConcurrentMap<Integer, Boolean> attackingIndex) {
-            final var state = combatStateMap.computeIfAbsent(attackerId, id -> new CombatState(id, targetId));
+        public void apply(
+                Map<Integer, CombatState> combatStateMap,
+                ConcurrentMap<Integer, Boolean> attackingIndex) {
+            final var state =
+                    combatStateMap.computeIfAbsent(attackerId, id -> new CombatState(id, targetId));
             state.setSwing(1);
-            state.setNextImpactAt(500); // windup, time until the next attack. compute based on strength dex, weapon
+            state.setNextImpactAt(
+                    500); // windup, time until the next attack. compute based on strength dex,
+            // weapon
             state.setAutoSwing(true);
             attackingIndex.put(attackerId, Boolean.TRUE);
         }
@@ -80,7 +94,9 @@ public class DefaultCombatSystem extends IntervalGameTask implements CombatSyste
 
     private record CancelAttack(int attackerId) implements CombatCommand {
         @Override
-        public void apply(Map<Integer, CombatState> combatStateMap, ConcurrentMap<Integer, Boolean> attackingIndex) {
+        public void apply(
+                Map<Integer, CombatState> combatStateMap,
+                ConcurrentMap<Integer, Boolean> attackingIndex) {
             final var state = combatStateMap.get(attackerId);
             if (state != null) {
                 state.setAutoSwing(false);

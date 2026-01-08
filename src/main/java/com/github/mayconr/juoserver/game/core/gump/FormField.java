@@ -27,28 +27,21 @@ public class FormField implements UIElement {
 
         if (!inline) {
             // Label em cima
-            LayoutContext labelCtx =
-                    new LayoutContext(ctx.x, ctx.y, ctx.width, 20);
+            LayoutContext labelCtx = new LayoutContext(ctx.x, ctx.y, ctx.width, 20);
             label.layout(labelCtx);
 
-            LayoutContext fieldCtx =
-                    new LayoutContext(ctx.x, ctx.y + 22, ctx.width, 24);
+            LayoutContext fieldCtx = new LayoutContext(ctx.x, ctx.y + 22, ctx.width, 24);
             field.layout(fieldCtx);
         } else {
             // Label + campo lado a lado
             int labelWidth = 80;
 
-            LayoutContext labelCtx =
-                    new LayoutContext(ctx.x, ctx.y, labelWidth, 24);
+            LayoutContext labelCtx = new LayoutContext(ctx.x, ctx.y, labelWidth, 24);
             label.layout(labelCtx);
 
             LayoutContext fieldCtx =
                     new LayoutContext(
-                            ctx.x + labelWidth + gap,
-                            ctx.y,
-                            ctx.width - labelWidth - gap,
-                            24
-                    );
+                            ctx.x + labelWidth + gap, ctx.y, ctx.width - labelWidth - gap, 24);
             field.layout(fieldCtx);
         }
     }

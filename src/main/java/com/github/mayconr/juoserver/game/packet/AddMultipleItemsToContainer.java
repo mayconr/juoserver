@@ -1,11 +1,12 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import java.util.Collection;
+
 import com.github.mayconr.juoserver.game.core.model.Container;
 import com.github.mayconr.juoserver.game.core.model.UOItem;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
 
-import java.util.Collection;
+import io.netty.buffer.ByteBuf;
 
 public class AddMultipleItemsToContainer extends AbstractPacket {
     public static final int CODE = (byte) 0x3C;

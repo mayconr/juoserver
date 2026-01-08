@@ -1,20 +1,21 @@
 package com.github.mayconr.juoserver.game.core.ai.ollama;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class OllamaClientChatImpl implements OllanaClient {
@@ -35,7 +36,13 @@ public class OllamaClientChatImpl implements OllanaClient {
             conn.setRequestProperty("Content-Type", "application/json");
             // jobautomation/OpenEuroLLM-Portuguese:latest
             // mistral:instruct
-            String json = objectMapper.writeValueAsString(new Payload("jobautomation/OpenEuroLLM-Portuguese:latest", messages, false, maxTokens));
+            String json =
+                    objectMapper.writeValueAsString(
+                            new Payload(
+                                    "jobautomation/OpenEuroLLM-Portuguese:latest",
+                                    messages,
+                                    false,
+                                    maxTokens));
 
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = json.getBytes(StandardCharsets.UTF_8);
@@ -43,20 +50,27 @@ public class OllamaClientChatImpl implements OllanaClient {
             }
 
             int code = conn.getResponseCode();
-            InputStream is = (code >= 200 && code < 300) ? conn.getInputStream() : conn.getErrorStream();
+            InputStream is =
+                    (code >= 200 && code < 300) ? conn.getInputStream() : conn.getErrorStream();
 
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            try (BufferedReader br =
+                    new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
                 StringBuilder stringBuilder = new StringBuilder();
                 String line;
                 while ((line = br.readLine()) != null) {
                     stringBuilder.append(line.trim());
                 }
-                final var responsePayload = new ObjectMapper().readValue(stringBuilder.toString(), ResponsePayload.class).getMessage().getContent()
-                        .replaceAll("```json", "").replaceAll("```", "");
+                final var responsePayload =
+                        new ObjectMapper()
+                                .readValue(stringBuilder.toString(), ResponsePayload.class)
+                                .getMessage()
+                                .getContent()
+                                .replaceAll("```json", "")
+                                .replaceAll("```", "");
                 try {
                     return objectMapper.readValue(responsePayload, Response.class);
                 } catch (JsonParseException exception) {
-                    log.warn("Unable to parse json ["+responsePayload+"]");
+                    log.warn("Unable to parse json [" + responsePayload + "]");
                     return new Response(responsePayload, null);
                 }
             }
@@ -72,6 +86,7 @@ public class OllamaClientChatImpl implements OllanaClient {
         private String model;
         private List<Message> messages;
         private Boolean stream;
+
         @JsonProperty("num_predict")
         private int maxTokens;
     }

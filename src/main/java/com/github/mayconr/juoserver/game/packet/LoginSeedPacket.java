@@ -1,11 +1,13 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
 
 public class LoginSeedPacket extends AbstractPacket {
 
@@ -16,7 +18,7 @@ public class LoginSeedPacket extends AbstractPacket {
     public LoginSeedPacket(ByteBuf buf) {
         super(CODE, 4);
 
-        //buf.readByte(); // ignore code
+        // buf.readByte(); // ignore code
 
         byte[] addressBytes = new byte[4];
         buf.readBytes(addressBytes);
@@ -26,7 +28,7 @@ public class LoginSeedPacket extends AbstractPacket {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
-        //clientVersion = buf.readInt()+"."+buf.readInt()+"."+buf.readInt()+"."+buf.readInt();
+        // clientVersion = buf.readInt()+"."+buf.readInt()+"."+buf.readInt()+"."+buf.readInt();
     }
 
     public InetAddress getAddress() {
@@ -39,9 +41,12 @@ public class LoginSeedPacket extends AbstractPacket {
 
     @Override
     public String toString() {
-        return "LoginSeedPacket{" +
-                "address=" + address +
-                ", clientVersion='" + clientVersion + '\'' +
-                '}';
+        return "LoginSeedPacket{"
+                + "address="
+                + address
+                + ", clientVersion='"
+                + clientVersion
+                + '\''
+                + '}';
     }
 }

@@ -9,23 +9,14 @@ public class Radio implements UIElement, Sized {
 
     private int x, y;
 
-    public Radio(
-            int uncheckedId,
-            int checkedId,
-            int switchId,
-            boolean checked
-    ) {
+    public Radio(int uncheckedId, int checkedId, int switchId, boolean checked) {
         this.uncheckedId = uncheckedId;
         this.checkedId = checkedId;
         this.switchId = switchId;
         this.checked = checked;
     }
 
-    public Radio(
-            int uncheckedId,
-            int checkedId,
-            int switchId
-    ) {
+    public Radio(int uncheckedId, int checkedId, int switchId) {
         this(uncheckedId, checkedId, switchId, false);
     }
 
@@ -41,14 +32,7 @@ public class Radio implements UIElement, Sized {
 
     @Override
     public void render(GumpBuilder g) {
-        g.radio(
-                x,
-                y,
-                uncheckedId,
-                checkedId,
-                checked,
-                switchId
-        );
+        g.radio(x, y, uncheckedId, checkedId, checked, switchId);
     }
 
     @Override

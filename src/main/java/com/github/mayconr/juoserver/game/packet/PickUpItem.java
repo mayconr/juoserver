@@ -1,6 +1,7 @@
 package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.ToString;
@@ -19,5 +20,4 @@ public class PickUpItem extends AbstractPacket {
         this.serialId = buf.readInt();
         this.amount = buf.readShort();
     }
-
 }

@@ -1,6 +1,7 @@
 package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
@@ -15,6 +16,4 @@ public class AttackRequest extends AbstractPacket {
         buf.readByte();
         this.opponentSerialId = buf.readInt();
     }
-
-
 }

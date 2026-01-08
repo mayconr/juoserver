@@ -1,9 +1,8 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.core.database.HardcodedDatabase;
-import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.UOItem;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,17 @@ public class ObjectInfo extends AbstractPacket {
     }
 
     private static int computeLength(UOItem item) {
-        return  1 + 2 + 4 + 2 + (item.getAmount() > 0 ? 2 : 0) + 2 + 2 + (item.getDirection() != null ? 1 : 0) + 1 + 2 + 1;
+        return 1
+                + 2
+                + 4
+                + 2
+                + (item.getAmount() > 0 ? 2 : 0)
+                + 2
+                + 2
+                + (item.getDirection() != null ? 1 : 0)
+                + 1
+                + 2
+                + 1;
     }
 
     @Override

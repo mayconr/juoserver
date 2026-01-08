@@ -1,12 +1,13 @@
 package com.github.mayconr.juoserver.game.core.session.player;
 
+import java.util.List;
+
 import com.github.mayconr.juoserver.game.core.model.*;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.packet.*;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor

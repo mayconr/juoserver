@@ -1,13 +1,14 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import com.github.mayconr.juoserver.game.core.model.CharacterListFlag;
 import com.github.mayconr.juoserver.game.core.model.UOCity;
 import com.github.mayconr.juoserver.game.core.model.UOPlayer;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
 
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import io.netty.buffer.ByteBuf;
 
 public class CharacterList extends AbstractPacket {
     public static final int CODE = (byte) 0xA9;
@@ -24,7 +25,13 @@ public class CharacterList extends AbstractPacket {
     }
 
     private static int calculateLength(List<UOPlayer> players, List<UOCity> cities) {
-        return 1 + 2 + + 1 + players.size() * (30 + 30) + 1 + cities.size() * (1 + 32 + 32 + 6 * 4) + 4;
+        return 1
+                + 2
+                + +1
+                + players.size() * (30 + 30)
+                + 1
+                + cities.size() * (1 + 32 + 32 + 6 * 4)
+                + 4;
     }
 
     @Override

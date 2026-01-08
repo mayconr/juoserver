@@ -1,12 +1,12 @@
 package com.github.mayconr.juoserver.game.core.prototype;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class PrototypeManagerImpl implements PrototypeManager {
 
@@ -16,7 +16,11 @@ public class PrototypeManagerImpl implements PrototypeManager {
     public PrototypeManagerImpl() {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         try (InputStream in = new FileInputStream("prototype/items.yaml")) {
-            final List<ItemPrototype> items = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, ItemPrototype.class));
+            final List<ItemPrototype> items =
+                    mapper.readValue(
+                            in,
+                            mapper.getTypeFactory()
+                                    .constructCollectionType(List.class, ItemPrototype.class));
             for (ItemPrototype item : items) {
                 nameItemPrototypeMap.put(item.getName(), item);
             }
@@ -25,7 +29,11 @@ public class PrototypeManagerImpl implements PrototypeManager {
         }
 
         try (InputStream in = new FileInputStream("prototype/npcs.yaml")) {
-            final List<NpcPrototype> npcs = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, NpcPrototype.class));
+            final List<NpcPrototype> npcs =
+                    mapper.readValue(
+                            in,
+                            mapper.getTypeFactory()
+                                    .constructCollectionType(List.class, NpcPrototype.class));
             for (NpcPrototype npc : npcs) {
                 npcPrototypeMap.put(npc.getName(), npc);
             }

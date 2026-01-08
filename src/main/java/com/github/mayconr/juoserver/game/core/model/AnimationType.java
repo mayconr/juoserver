@@ -45,5 +45,4 @@ public enum AnimationType {
     SAME(0x24);
 
     private final int code;
-
 }

@@ -1,9 +1,5 @@
 package com.github.mayconr.juoserver.game.core.gump;
 
-public record GumpContext(
-        int gumpId,
-        int ownerSerial,
-        long createdAt,
-        GumpHandler handler
-) {
-}
+import com.github.mayconr.juoserver.game.core.model.UOPlayer;
+
+public record GumpContext(int gumpId, UOPlayer player, long createdAt, GumpHandler handler) {}

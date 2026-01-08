@@ -1,7 +1,8 @@
 package com.github.mayconr.juoserver.game.core.database;
 
-import com.github.mayconr.juoserver.game.core.prototype.PrototypeManager;
 import org.springframework.context.annotation.Bean;
+
+import com.github.mayconr.juoserver.game.core.prototype.PrototypeManager;
 
 public class DatabaseConfiguration {
 
@@ -9,6 +10,4 @@ public class DatabaseConfiguration {
     public Database database(PrototypeManager prototypeManager) {
         return new HardcodedDatabase(prototypeManager);
     }
-
-
 }

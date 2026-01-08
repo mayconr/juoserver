@@ -4,31 +4,26 @@ public class Panel implements UIElement {
 
     private final int width;
     private final int height;
-    private final Integer backgroundGumpPicId; // null = sem background
-    private final int hue;
+    private final Integer gumPicId; // null = sem background
+    private final boolean resizable;
     private final UIElement content;
 
     private int x, y;
 
-    // Panel SEM background (container puro)
     public Panel(int width, int height, UIElement content) {
-        this.width = width;
-        this.height = height;
-        this.backgroundGumpPicId = null;
-        this.hue = 0;
-        this.content = content;
+        this(null , width, height, true, content);
     }
 
     // Panel COM background
-    public Panel(int width, int height, int backgroundGumpPicId, UIElement content) {
-        this(width, height, backgroundGumpPicId, 0, content);
+    public Panel(Integer gumPicId, int width, int height, UIElement content) {
+        this(gumPicId, width, height, true, content);
     }
 
-    public Panel(int width, int height, int backgroundGumpPicId, int hue, UIElement content) {
+    public Panel(Integer gumPicId, int width, int height, boolean resizable, UIElement content) {
         this.width = width;
         this.height = height;
-        this.backgroundGumpPicId = backgroundGumpPicId;
-        this.hue = hue;
+        this.gumPicId = gumPicId;
+        this.resizable = resizable;
         this.content = content;
     }
 
@@ -37,23 +32,23 @@ public class Panel implements UIElement {
         this.x = ctx.x;
         this.y = ctx.y;
 
-        // padding só existe se houver background
-        int padding = backgroundGumpPicId != null ? 10 : 0;
+        // padding
+        int padding = gumPicId != null ? 10 : 0;
 
-        LayoutContext inner = ctx.child(
-                x + padding,
-                y + padding,
-                width - padding * 2,
-                height - padding * 2
-        );
+        LayoutContext inner =
+                ctx.child(x + padding, y + padding, width - padding * 2, height - padding * 2);
 
         content.layout(inner);
     }
 
     @Override
     public void render(GumpBuilder g) {
-        if (backgroundGumpPicId != null) {
-            g.resizePic(x, y, backgroundGumpPicId, width, height);
+        if (gumPicId != null) {
+            if (resizable) {
+                g.resizePic(x, y, gumPicId, width, height);
+            } else {
+                g.gumpPic(x, y, gumPicId);
+            }
         }
 
         content.render(g);

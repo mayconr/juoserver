@@ -3,6 +3,7 @@ package com.github.mayconr.juoserver.game.packet;
 import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 
 public class DrawGamePlayer extends AbstractPacket {
@@ -16,8 +17,8 @@ public class DrawGamePlayer extends AbstractPacket {
     private int z;
     private Direction direction;
 
-    public DrawGamePlayer(int serialId, int modelId,
-                          int hue, int x, int y, int z, Direction direction) {
+    public DrawGamePlayer(
+            int serialId, int modelId, int hue, int x, int y, int z, Direction direction) {
         super(CODE, 19);
         this.serialId = serialId;
         this.modelId = modelId;

@@ -8,6 +8,7 @@ import com.github.mayconr.juoserver.game.core.model.UONpc;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.packet.DrawMobile;
 import com.github.mayconr.juoserver.game.packet.SendSpeech;
+
 import io.netty.channel.group.ChannelGroup;
 
 public class DefaultNpcSession implements NpcSession {
@@ -18,7 +19,13 @@ public class DefaultNpcSession implements NpcSession {
     private final NpcAI npcAI;
     private final MovementService movementService;
 
-    public DefaultNpcSession(GameSession gameSession, UONpc npc, ChannelGroup channelGroup, EventBus eventBus, NpcAI npcAI, MovementService movementService) {
+    public DefaultNpcSession(
+            GameSession gameSession,
+            UONpc npc,
+            ChannelGroup channelGroup,
+            EventBus eventBus,
+            NpcAI npcAI,
+            MovementService movementService) {
         this.npc = npc;
         this.channelGroup = channelGroup;
         this.eventBus = eventBus;
@@ -49,7 +56,5 @@ public class DefaultNpcSession implements NpcSession {
     }
 
     @Override
-    public void move(Location location) {
-
-    }
+    public void move(Location location) {}
 }

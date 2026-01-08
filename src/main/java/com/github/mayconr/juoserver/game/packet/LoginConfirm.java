@@ -3,6 +3,7 @@ package com.github.mayconr.juoserver.game.packet;
 import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 
 public class LoginConfirm extends AbstractPacket {
@@ -17,9 +18,16 @@ public class LoginConfirm extends AbstractPacket {
     private int mapWidthMinusEight;
     private int mapHeightMinusEight;
 
-    public LoginConfirm(int serialId, int modelId, int x, int y, int z,
-                        Direction direction, int notoriety, int mapWidthMinusEight,
-                        int mapHeightMinusEight) {
+    public LoginConfirm(
+            int serialId,
+            int modelId,
+            int x,
+            int y,
+            int z,
+            Direction direction,
+            int notoriety,
+            int mapWidthMinusEight,
+            int mapHeightMinusEight) {
         super(CODE, 37);
         this.serialId = serialId;
         this.modelId = modelId;

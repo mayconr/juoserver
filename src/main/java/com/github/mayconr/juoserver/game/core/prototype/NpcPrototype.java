@@ -1,10 +1,11 @@
 package com.github.mayconr.juoserver.game.core.prototype;
 
-import com.github.mayconr.juoserver.game.core.model.*;
-import lombok.Data;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.github.mayconr.juoserver.game.core.model.*;
+
+import lombok.Data;
 
 @Data
 public class NpcPrototype {

@@ -22,6 +22,6 @@ public class PlayerVitalsTask extends IntervalGameTask {
 
     @Override
     public String toString() {
-        return "PlayerVitals "+ session.getPlayer().getName();
+        return "PlayerVitals " + session.getPlayer().getName();
     }
 }

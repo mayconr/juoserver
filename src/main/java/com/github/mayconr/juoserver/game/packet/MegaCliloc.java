@@ -1,14 +1,15 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.core.model.Clilocs;
-import com.github.mayconr.juoserver.game.core.model.UOObject;
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Objects;
+
+import com.github.mayconr.juoserver.game.core.model.Clilocs;
+import com.github.mayconr.juoserver.game.core.model.UOObject;
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
 
 public class MegaCliloc extends AbstractPacket {
     public static final int CODE = (byte) 0xD6;
@@ -18,11 +19,12 @@ public class MegaCliloc extends AbstractPacket {
     public MegaCliloc(ByteBuf buf) {
         super(CODE, calculeLength(buf));
         if ((getLength() - 3) % 4 != 0) {
-            throw new IllegalStateException("Bad MegaCliloc message: " + HexFormat.of().formatHex(buf.array()));
+            throw new IllegalStateException(
+                    "Bad MegaCliloc message: " + HexFormat.of().formatHex(buf.array()));
         }
         int nQueries = (getLength() - 3) / 4;
         for (int i = 0; i < nQueries; i++) {
-            serialList.add( buf.readInt() );
+            serialList.add(buf.readInt());
         }
     }
 
@@ -58,8 +60,8 @@ public class MegaCliloc extends AbstractPacket {
             for (int i = 0; i < text.length(); i++) {
                 char c = text.charAt(i);
                 // Write char as 2-byte little endian (UTF-16LE)
-                buf.writeByte(c & 0xFF);         // LSB
-                buf.writeByte((c >> 8) & 0xFF);  // MSB
+                buf.writeByte(c & 0xFF); // LSB
+                buf.writeByte((c >> 8) & 0xFF); // MSB
             }
         }
         buf.writeInt(0); // end byte 25
@@ -68,5 +70,4 @@ public class MegaCliloc extends AbstractPacket {
     public List<Integer> getSerialList() {
         return serialList;
     }
-
 }

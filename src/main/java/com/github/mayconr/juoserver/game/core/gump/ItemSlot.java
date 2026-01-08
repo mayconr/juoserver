@@ -16,12 +16,7 @@ class ItemSlot implements UIElement, Sized {
         x = ctx.x;
         y = ctx.y;
 
-        LayoutContext inner = new LayoutContext(
-                x + 4,
-                y + 4,
-                size - 8,
-                size - 8
-        );
+        LayoutContext inner = new LayoutContext(x + 4, y + 4, size - 8, size - 8);
 
         content.layout(inner);
     }
@@ -33,9 +28,12 @@ class ItemSlot implements UIElement, Sized {
     }
 
     @Override
-    public int getWidth() { return size; }
+    public int getWidth() {
+        return size;
+    }
 
     @Override
-    public int getHeight() { return size; }
+    public int getHeight() {
+        return size;
+    }
 }
-

@@ -1,10 +1,10 @@
 package com.github.mayconr.juoserver.game.core.ai;
 
-import lombok.RequiredArgsConstructor;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class DefaultNpcAiRegistry implements NpcAiRegistry {
@@ -20,6 +20,6 @@ public class DefaultNpcAiRegistry implements NpcAiRegistry {
         if (npcAIMap.containsKey(ai)) {
             return npcAIMap.get(ai).get();
         }
-        throw new IllegalArgumentException("AI ["+ai+"] not found in registry");
+        throw new IllegalArgumentException("AI [" + ai + "] not found in registry");
     }
 }

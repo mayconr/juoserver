@@ -3,13 +3,13 @@ package com.github.mayconr.juoserver.game.packet.handler;
 import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.packet.DeleteCharacter;
 import com.github.mayconr.juoserver.game.packet.LoginReject;
+
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 @ChannelHandler.Sharable
-public
-class DeleteCharacterHandler extends SimpleChannelInboundHandler<DeleteCharacter> {
+public class DeleteCharacterHandler extends SimpleChannelInboundHandler<DeleteCharacter> {
 
     private final Database database;
 

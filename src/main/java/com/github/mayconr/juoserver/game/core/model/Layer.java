@@ -6,137 +6,71 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Layer {
-    /**
-     * Invalid layer.
-     */
+    /** Invalid layer. */
     INVALID(0x00),
-    /**
-     * First valid layer. Equivalent to OneHanded.
-     */
+    /** First valid layer. Equivalent to OneHanded. */
     FIRST_VALID(0x01),
-    /**
-     * One handed weapon.
-     */
+    /** One handed weapon. */
     ONE_HANDED(0x01),
-    /**
-     * Two handed weapon or shield.
-     */
+    /** Two handed weapon or shield. */
     TWO_HANDED(0x02),
-    /**
-     * Shoes.
-     */
+    /** Shoes. */
     SHOES(0x03),
-    /**
-     * Pants.
-     */
+    /** Pants. */
     PANTS(0x04),
-    /**
-     * Shirts.
-     */
+    /** Shirts. */
     SHIRT(0x05),
-    /**
-     * Helmets), hats), and masks.
-     */
+    /** Helmets), hats), and masks. */
     HEAD(0x06),
-    /**
-     * Gloves.
-     */
+    /** Gloves. */
     GLOVES(0x07),
-    /**
-     * Rings.
-     */
+    /** Rings. */
     RING(0x08),
-    /**
-     * Talismans.
-     */
+    /** Talismans. */
     TALISMAN(0x09),
-    /**
-     * Gorgets and necklaces.
-     */
+    /** Gorgets and necklaces. */
     NECK(0x0A),
-    /**
-     * Hair.
-     */
+    /** Hair. */
     HAIR(0x0B),
-    /**
-     * Half aprons.
-     */
+    /** Half aprons. */
     WAIST(0x0C),
-    /**
-     * Torso, inner layer.
-     */
+    /** Torso, inner layer. */
     INNER_TORSO(0x0D),
-    /**
-     * Bracelets.
-     */
+    /** Bracelets. */
     BRACELET(0x0E),
-    /**
-     * Unused.
-     */
+    /** Unused. */
     UNUSED_XF(0x0F),
-    /**
-     * Beards and mustaches.
-     */
+    /** Beards and mustaches. */
     FACIAL_HAIR(0x10),
-    /**
-     * Torso), outer layer.
-     */
+    /** Torso), outer layer. */
     MIDDLE_TORSO(0x11),
-    /**
-     * Earrings.
-     */
+    /** Earrings. */
     EARRINGS(0x12),
-    /**
-     * Arms and sleeves.
-     */
+    /** Arms and sleeves. */
     ARMS(0x13),
-    /**
-     * Cloaks.
-     */
+    /** Cloaks. */
     CLOAK(0x14),
-    /**
-     * Backpacks.
-     */
+    /** Backpacks. */
     BACKPACK(0x15),
-    /**
-     * Torso, outer layer.
-     */
+    /** Torso, outer layer. */
     OUTER_TORSO(0x16),
-    /**
-     * Leggings, outer layer.
-     */
+    /** Leggings, outer layer. */
     OUTER_LEGS(0x17),
-    /**
-     * Leggings, inner layer.
-     */
+    /** Leggings, inner layer. */
     INNER_LEGS(0x18),
-    /**
-     * Last valid non-internal layer. Equivalent to <c>Layer.InnerLegs</c>.
-     */
+    /** Last valid non-internal layer. Equivalent to <c>Layer.InnerLegs</c>. */
     LAST_USER_VALID(0x18),
-    /**
-     * Mount item layer.
-     */
+    /** Mount item layer. */
     MOUNT(0x19),
-    /**
-     * Vendor 'buy pack' layer.
-     */
+    /** Vendor 'buy pack' layer. */
     SHOP_BUY(0x1A),
-    /**
-     * Vendor 'resale pack' layer.
-     */
+    /** Vendor 'resale pack' layer. */
     SHOP_RESALE(0x1B),
-    /**
-     * Vendor 'sell pack' layer.
-     */
+    /** Vendor 'sell pack' layer. */
     SHOP_SELL(0x1C),
-    /**
-     * Bank box layer.
-     */
+    /** Bank box layer. */
     BANK(0x1D),
-    /**
-     * Last valid layer. Equivalent to <tt>Layer.Bank</tt>.
-     */
+    /** Last valid layer. Equivalent to <tt>Layer.Bank</tt>. */
     LAST_VALID(0x1D);
 
     private final int code;

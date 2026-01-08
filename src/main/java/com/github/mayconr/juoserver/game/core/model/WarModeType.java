@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public enum WarModeType {
-
-    NORMAL(0), FIGHTING(1);
+    NORMAL(0),
+    FIGHTING(1);
 
     private final int code;
 

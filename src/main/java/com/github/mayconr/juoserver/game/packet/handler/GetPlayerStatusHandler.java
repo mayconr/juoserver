@@ -4,13 +4,15 @@ import com.github.mayconr.juoserver.game.core.model.Race;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
 import com.github.mayconr.juoserver.game.packet.GetPlayerStatus;
 import com.github.mayconr.juoserver.game.packet.StatusBarInfo;
+
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 
 @ChannelHandler.Sharable
 public class GetPlayerStatusHandler extends PlayerSessionChannelInboundHandler<GetPlayerStatus> {
     @Override
-    protected void channelRead0(PlayerSession session, ChannelHandlerContext ctx, GetPlayerStatus msg) {
+    protected void channelRead0(
+            PlayerSession session, ChannelHandlerContext ctx, GetPlayerStatus msg) {
         System.out.println("enviando status");
         final var player = session.getPlayer();
         player.setHitpoints(7);

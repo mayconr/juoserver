@@ -1,9 +1,9 @@
 package com.github.mayconr.juoserver.game.core.model;
 
+import java.util.Optional;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Optional;
 
 @Getter
 @RequiredArgsConstructor

@@ -1,27 +1,24 @@
 package com.github.mayconr.juoserver.game.core.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ToString(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UOObject implements Location, AttributeSupport {
-    @EqualsAndHashCode.Include
-    @ToString.Include
-    private final int serialId;
+    @EqualsAndHashCode.Include @ToString.Include private final int serialId;
     private int modelId;
     private int x;
     private int y;
     private int z;
-    @ToString.Include
-    private String name;
+    @ToString.Include private String name;
     private final Map<String, Object> attrMap = new HashMap<>();
 
     public UOObject(int serialId, int modelId, int x, int y, int z, String name) {
@@ -46,6 +43,7 @@ public class UOObject implements Location, AttributeSupport {
         this.x = x;
         this.y = y;
     }
+
     public void setLocation(int x, int y, int z) {
         this.x = x;
         this.y = y;
@@ -84,5 +82,4 @@ public class UOObject implements Location, AttributeSupport {
         }
         return value;
     }
-
 }

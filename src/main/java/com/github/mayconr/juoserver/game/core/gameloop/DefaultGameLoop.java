@@ -1,9 +1,9 @@
 package com.github.mayconr.juoserver.game.core.gameloop;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class DefaultGameLoop implements GameLoop {
@@ -31,30 +31,33 @@ public class DefaultGameLoop implements GameLoop {
     }
 
     public DefaultGameLoop start() {
-        new Thread(() -> {
-            long currentTick = 0;
-            log.info("Gameloop started");
-            while (running) {
-                try {
-                    synchronized (gameTasks) {
-                        final var iterator = gameTasks.iterator();
-                        while (iterator.hasNext()) {
-                            final var task = iterator.next();
-                            task.execute(currentTick);
-                            if (task.isDone()) {
-                                iterator.remove();
-                                log.info("Game task [{}] removed!", task);
+        new Thread(
+                        () -> {
+                            long currentTick = 0;
+                            log.info("Gameloop started");
+                            while (running) {
+                                try {
+                                    synchronized (gameTasks) {
+                                        final var iterator = gameTasks.iterator();
+                                        while (iterator.hasNext()) {
+                                            final var task = iterator.next();
+                                            task.execute(currentTick);
+                                            if (task.isDone()) {
+                                                iterator.remove();
+                                                log.info("Game task [{}] removed!", task);
+                                            }
+                                        }
+                                    }
+                                    Thread.sleep(1000 / TPS);
+                                } catch (InterruptedException e) {
+                                    Thread.currentThread().interrupt();
+                                }
+                                currentTick++;
                             }
-                        }
-                    }
-                    Thread.sleep(1000 / TPS);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                currentTick++;
-            }
-            log.info("Gameloop stopped");
-        }, "gameloop").start();
+                            log.info("Gameloop stopped");
+                        },
+                        "gameloop")
+                .start();
         return this;
     }
 

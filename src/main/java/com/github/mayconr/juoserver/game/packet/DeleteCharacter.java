@@ -1,10 +1,11 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
+
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
 
 public class DeleteCharacter extends AbstractPacket {
 
@@ -35,9 +36,6 @@ public class DeleteCharacter extends AbstractPacket {
 
     @Override
     public String toString() {
-        return "DeleteCharacter{" +
-                "selectedSlot=" + selectedSlot +
-                ", clientIp=" + clientIp +
-                '}';
+        return "DeleteCharacter{" + "selectedSlot=" + selectedSlot + ", clientIp=" + clientIp + '}';
     }
 }

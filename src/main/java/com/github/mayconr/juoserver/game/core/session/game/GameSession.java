@@ -6,6 +6,7 @@ import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.core.model.UOPlayer;
 import com.github.mayconr.juoserver.game.core.session.npc.NpcSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
+
 import io.netty.channel.ChannelHandlerContext;
 
 public interface GameSession {
@@ -23,5 +24,4 @@ public interface GameSession {
     void deleteItem(UOItem item);
 
     void moveItem(UOItem item, Location location);
-
 }

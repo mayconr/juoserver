@@ -29,9 +29,6 @@ public class UOAccount {
 
     @Override
     public String toString() {
-        return "UOAccount{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                '}';
+        return "UOAccount{" + "id='" + id + '\'' + ", username='" + username + '\'' + '}';
     }
 }

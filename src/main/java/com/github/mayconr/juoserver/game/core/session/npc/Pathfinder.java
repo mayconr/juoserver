@@ -1,9 +1,9 @@
 package com.github.mayconr.juoserver.game.core.session.npc;
 
+import java.util.*;
+
 import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.core.model.Location;
-
-import java.util.*;
 
 public class Pathfinder {
 
@@ -110,7 +110,9 @@ public class Pathfinder {
 
                 if (!isWalkable(neighbor)) continue;
 
-                double newCost = current.gCost + ((dir.getDx() == 0 || dir.getDy() == 0) ? 1.0 : Math.sqrt(2));
+                double newCost =
+                        current.gCost
+                                + ((dir.getDx() == 0 || dir.getDy() == 0) ? 1.0 : Math.sqrt(2));
 
                 if (!costSoFar.containsKey(neighbor) || newCost < costSoFar.get(neighbor)) {
                     costSoFar.put(neighbor, newCost);
@@ -142,9 +144,11 @@ public class Pathfinder {
     }
 
     private boolean isWalkable(Location loc) {
-        return loc.getX() >= 0 && loc.getX() < width &&
-                loc.getY() >= 0 && loc.getY() < height &&
-                walkableMap[loc.getX()][loc.getY()] &&
-                !dynamicBlocks.contains(loc);
+        return loc.getX() >= 0
+                && loc.getX() < width
+                && loc.getY() >= 0
+                && loc.getY() < height
+                && walkableMap[loc.getX()][loc.getY()]
+                && !dynamicBlocks.contains(loc);
     }
 }

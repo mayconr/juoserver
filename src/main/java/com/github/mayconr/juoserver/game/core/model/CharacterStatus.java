@@ -3,8 +3,6 @@ package com.github.mayconr.juoserver.game.core.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.EnumSet;
-
 @RequiredArgsConstructor
 @Getter
 public enum CharacterStatus {
@@ -18,5 +16,4 @@ public enum CharacterStatus {
     WAR_MODE(0x40);
 
     private final int code;
-
 }

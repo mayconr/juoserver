@@ -8,6 +8,7 @@ import com.github.mayconr.juoserver.game.packet.AttackCharacter;
 import com.github.mayconr.juoserver.game.packet.RequestWarMode;
 import com.github.mayconr.juoserver.game.packet.UpdateMobileStatus;
 import com.github.mayconr.juoserver.game.packet.UpdatePlayer;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,8 @@ public class CombatService {
     void handleAttack(int opponentSerialId) {
         combatSystem.requestAttack(player.getSerialId(), opponentSerialId);
         // TODO validate (range, LOS, cooldown, warmode, stamina, flags)
-        channelGroup.writeAndFlush(new UpdateMobileStatus(opponentSerialId, player.getSerialId()), channel -> !channel.equals(ctx.channel()));
+        channelGroup.writeAndFlush(
+                new UpdateMobileStatus(opponentSerialId, player.getSerialId()),
+                channel -> !channel.equals(ctx.channel()));
     }
 }

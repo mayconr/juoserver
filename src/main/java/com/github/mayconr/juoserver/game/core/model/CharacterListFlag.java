@@ -1,7 +1,6 @@
 package com.github.mayconr.juoserver.game.core.model;
 
 public enum CharacterListFlag {
-
     SINGLE_CHAR(0x14),
     MONDAINS_LEGACY(0x1A8),
     ENABLE_AOS_COMMON(0x20),

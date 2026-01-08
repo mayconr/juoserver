@@ -1,12 +1,13 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import java.nio.charset.StandardCharsets;
+
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.nio.charset.StandardCharsets;
 
 @Getter
 public class OpenPaperdoll extends AbstractPacket {
@@ -39,6 +40,5 @@ public class OpenPaperdoll extends AbstractPacket {
         WAR_MODE(0x40),
         HIDDEN(0x80);
         private final int code;
-
     }
 }

@@ -1,13 +1,14 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 import com.github.mayconr.juoserver.game.core.model.TextType;
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.core.model.UONpc;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import io.netty.buffer.ByteBuf;
 
 public class SendSpeech extends AbstractPacket {
 
@@ -20,7 +21,14 @@ public class SendSpeech extends AbstractPacket {
     private String name;
     private String message;
 
-    public SendSpeech(TextType type, int hue, int itemId, int modelId, int font, String name, String message) {
+    public SendSpeech(
+            TextType type,
+            int hue,
+            int itemId,
+            int modelId,
+            int font,
+            String name,
+            String message) {
         super(CODE, 44 + message.length());
         this.type = type;
         this.hue = hue;
@@ -32,11 +40,25 @@ public class SendSpeech extends AbstractPacket {
     }
 
     public SendSpeech(UONpc npc, String message) {
-        this(TextType.NORMAL, npc.getSpeechHue(), npc.getSerialId(), 0, npc.getSpeechFont(), npc.getName(), message);
+        this(
+                TextType.NORMAL,
+                npc.getSpeechHue(),
+                npc.getSerialId(),
+                0,
+                npc.getSpeechFont(),
+                npc.getName(),
+                message);
     }
 
     public SendSpeech(UOMobile mobile, UnicodeSpeachRequest request) {
-        this(request.getType(), request.getHue(), mobile.getSerialId(), mobile.getModelId(), request.getFont(), mobile.getName(), request.getText());
+        this(
+                request.getType(),
+                request.getHue(),
+                mobile.getSerialId(),
+                mobile.getModelId(),
+                request.getFont(),
+                mobile.getName(),
+                request.getText());
     }
 
     @Override

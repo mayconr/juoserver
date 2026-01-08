@@ -1,13 +1,14 @@
 package com.github.mayconr.juoserver.game.packet;
 
+import java.util.Arrays;
+
 import com.github.mayconr.juoserver.game.core.model.CursorTarget;
 import com.github.mayconr.juoserver.game.core.model.CursorType;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.util.Arrays;
 
 @ToString
 @Getter
@@ -52,7 +53,7 @@ public class Target extends AbstractPacket {
         buf.writeInt(cursorId);
         buf.writeByte(type.getCode());
         var noData = new byte[12];
-        Arrays.fill(noData, (byte) 0 );
+        Arrays.fill(noData, (byte) 0);
         buf.writeBytes(noData);
     }
 }

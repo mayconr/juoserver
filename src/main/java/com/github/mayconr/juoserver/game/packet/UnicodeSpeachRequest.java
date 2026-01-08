@@ -1,17 +1,16 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.core.model.TextType;
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-import lombok.Getter;
-import lombok.ToString;
-
-import java.io.ByteArrayOutputStream;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import com.github.mayconr.juoserver.game.core.model.TextType;
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @ToString
@@ -40,9 +39,10 @@ public class UnicodeSpeachRequest extends AbstractPacket {
         if ((typeByte & ENCODED_BITS) != 0) {
             // encoded — read trigger words
 
-            // number of trigger words - 12 bits (bits 11..4 = byte 13, bits 7..4 of byte 14 are bits 0..3)
+            // number of trigger words - 12 bits (bits 11..4 = byte 13, bits 7..4 of byte 14 are
+            // bits 0..3)
             int numWordsHigh = buf.readUnsignedByte(); // byte 13
-            int numWordsLow = buf.readUnsignedByte();  // byte 14
+            int numWordsLow = buf.readUnsignedByte(); // byte 14
 
             this.numTriggerWords = ((numWordsHigh << 4) & 0xFF0) | ((numWordsLow >> 4) & 0xF);
 
@@ -87,5 +87,4 @@ public class UnicodeSpeachRequest extends AbstractPacket {
     public boolean isPrivate() {
         return (flags & 0x40) != 0;
     }
-
 }

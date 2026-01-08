@@ -11,5 +11,4 @@ public enum AnimationRepeat {
     FOREVER(0);
 
     private final int code;
-
 }

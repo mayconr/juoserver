@@ -1,5 +1,13 @@
 package com.github.mayconr.juoserver.game;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Import;
+
 import com.github.mayconr.juoserver.game.core.ai.BankerAI;
 import com.github.mayconr.juoserver.game.core.ai.DefaultNpcAiRegistry;
 import com.github.mayconr.juoserver.game.core.ai.NpcAiRegistry;
@@ -14,8 +22,8 @@ import com.github.mayconr.juoserver.game.core.event.EventBus;
 import com.github.mayconr.juoserver.game.core.gameloop.DefaultGameLoop;
 import com.github.mayconr.juoserver.game.core.gameloop.GameLoop;
 import com.github.mayconr.juoserver.game.core.gump.DefaultHandlerGumpSystem;
-import com.github.mayconr.juoserver.game.core.gump.GumpSystemCallback;
 import com.github.mayconr.juoserver.game.core.gump.GumpSystem;
+import com.github.mayconr.juoserver.game.core.gump.GumpSystemCallback;
 import com.github.mayconr.juoserver.game.core.prototype.PrototypeConfiguration;
 import com.github.mayconr.juoserver.game.core.session.game.DefaultGameSession;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
@@ -27,6 +35,7 @@ import com.github.mayconr.juoserver.game.packet.handler.*;
 import com.github.mayconr.juoserver.game.server.ClientConnectedHandlerAdapter;
 import com.github.mayconr.juoserver.game.server.ServerStartup;
 import com.github.mayconr.juoserver.game.server.UOChannelInitializer;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -35,19 +44,9 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.GlobalEventExecutor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
-
-import java.util.List;
 
 @Configuration
-@Import({
-        DatabaseConfiguration.class,
-        PrototypeConfiguration.class
-})
+@Import({DatabaseConfiguration.class, PrototypeConfiguration.class})
 public class ApplicationConfiguration {
 
     // ========= Independents =========
@@ -89,8 +88,7 @@ public class ApplicationConfiguration {
             EventBus eventBus,
             Database database,
             GameLoop gameLoop,
-            CombatSystem combatSystem
-    ) {
+            CombatSystem combatSystem) {
         return new PlayerSessionFactory(channelGroup, eventBus, database, gameLoop, combatSystem);
     }
 
@@ -100,21 +98,24 @@ public class ApplicationConfiguration {
             ChannelGroup channelGroup,
             PlayerSessionFactory playerSessionFactory,
             NpcSessionFactory npcSessionFactory,
-            EventBus eventBus
-    ) {
+            EventBus eventBus) {
         final var messageService = new MessageService(channelGroup);
         final var itemService = new ItemService(database, channelGroup, eventBus);
-        return new DefaultGameSession(database, channelGroup, eventBus, playerSessionFactory, npcSessionFactory, messageService, itemService);
+        return new DefaultGameSession(
+                database,
+                channelGroup,
+                eventBus,
+                playerSessionFactory,
+                npcSessionFactory,
+                messageService,
+                itemService);
     }
 
     // ========= Packet Handlers =========
 
     @Bean
     public List<SimpleChannelInboundHandler<?>> packetHandlers(
-            Database database,
-            GameSession gameSession,
-            GumpSystemCallback gumpSystemCallback
-    ) {
+            Database database, GameSession gameSession, GumpSystemCallback gumpSystemCallback) {
         return List.of(
                 new GameServerLoginHandler(database),
                 new PingPongHandler(),
@@ -136,8 +137,7 @@ public class ApplicationConfiguration {
                 new RequestHelpHandler(),
                 new RequestWarModeHandler(),
                 new AttackRequestHandler(),
-                new GumpSelectionHandler(gumpSystemCallback)
-        );
+                new GumpSelectionHandler(gumpSystemCallback));
     }
 
     // ========= Network =========
@@ -167,8 +167,7 @@ public class ApplicationConfiguration {
     @Bean
     public UOChannelInitializer channelInitializer(
             ClientConnectedHandlerAdapter clientConnectedHandlerAdapter,
-            List<SimpleChannelInboundHandler<?>> packetHandlers
-    ) {
+            List<SimpleChannelInboundHandler<?>> packetHandlers) {
         return new UOChannelInitializer(clientConnectedHandlerAdapter, packetHandlers);
     }
 
@@ -176,8 +175,7 @@ public class ApplicationConfiguration {
     public ServerBootstrap serverBootstrap(
             UOChannelInitializer channelInitializer,
             @Qualifier("parent") NioEventLoopGroup parentNioEventLoopGroup,
-            @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup
-    ) {
+            @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup) {
         return new ServerBootstrap()
                 .group(parentNioEventLoopGroup, childNioEventLoopGroup)
                 .channel(NioServerSocketChannel.class)
@@ -190,24 +188,26 @@ public class ApplicationConfiguration {
     public ServerStartup serverStartup(
             ServerBootstrap serverBootstrap,
             @Qualifier("parent") NioEventLoopGroup parentNioEventLoopGroup,
-            @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup
-    ) {
+            @Qualifier("child") NioEventLoopGroup childNioEventLoopGroup) {
         return new ServerStartup(serverBootstrap, parentNioEventLoopGroup, childNioEventLoopGroup);
     }
 
     // ========= AI =========
 
     @Bean
-    public NpcAiRegistry npcAiRegistry(Database database, OllanaClient ollanaClient, EventBus eventBus) {
+    public NpcAiRegistry npcAiRegistry(
+            Database database, OllanaClient ollanaClient, EventBus eventBus) {
         final var registry = new DefaultNpcAiRegistry();
-        registry.registerAI("BANKER", ()->new BankerAI(database, ollanaClient, eventBus));
+        registry.registerAI("BANKER", () -> new BankerAI(database, ollanaClient, eventBus));
         return registry;
     }
 
     @Bean
-    public NpcSessionFactory npcSessionFactory(EventBus eventBus, ChannelGroup channelGroup, GameLoop gameLoop,
-                                               NpcAiRegistry aiRegistry) {
+    public NpcSessionFactory npcSessionFactory(
+            EventBus eventBus,
+            ChannelGroup channelGroup,
+            GameLoop gameLoop,
+            NpcAiRegistry aiRegistry) {
         return new NpcSessionFactory(eventBus, channelGroup, gameLoop, aiRegistry);
     }
-
 }

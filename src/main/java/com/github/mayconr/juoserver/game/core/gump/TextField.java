@@ -28,8 +28,7 @@ public class TextField implements UIElement, Sized {
             int height,
             int hue,
             String initialText,
-            boolean drawBackground
-    ) {
+            boolean drawBackground) {
         this.entryId = entryId;
         this.width = width;
         this.height = height;
@@ -58,15 +57,7 @@ public class TextField implements UIElement, Sized {
         }
 
         // 3️⃣ textentry (com padding interno)
-        g.textEntry(
-                x + 4,
-                y + 4,
-                width - 8,
-                height - 8,
-                hue,
-                entryId,
-                textIndex
-        );
+        g.textEntry(x + 4, y + 4, width - 8, height - 8, hue, entryId, textIndex);
     }
 
     @Override

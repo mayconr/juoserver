@@ -1,11 +1,12 @@
 package com.github.mayconr.juoserver.game.core.model;
 
-import com.github.mayconr.juoserver.game.core.prototype.ItemPrototype;
-import lombok.Getter;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.github.mayconr.juoserver.game.core.prototype.ItemPrototype;
+
+import lombok.Getter;
 
 @Getter
 public class UOContainer extends UOItem implements Container {

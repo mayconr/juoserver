@@ -7,7 +7,6 @@ abstract class Container implements UIElement {
     protected final List<UIElement> children = new ArrayList<>();
     protected int x, y, width, height;
 
-
     Container(int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
@@ -15,16 +14,13 @@ abstract class Container implements UIElement {
         this.height = height;
     }
 
-
     public Container add(UIElement e) {
         children.add(e);
         return this;
     }
 
-
     @Override
     public void render(GumpBuilder g) {
-        for (UIElement e : children)
-            e.render(g);
+        for (UIElement e : children) e.render(g);
     }
 }

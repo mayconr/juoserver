@@ -13,5 +13,4 @@ public class CombatState {
     private int swing = 0;
     private int nextImpactAt;
     private boolean autoSwing;
-
 }

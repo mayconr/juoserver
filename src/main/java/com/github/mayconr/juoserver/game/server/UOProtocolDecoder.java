@@ -1,17 +1,19 @@
 package com.github.mayconr.juoserver.game.server;
 
-import com.github.mayconr.juoserver.game.packet.*;
-import com.github.mayconr.juoserver.game.packet.RequestWarMode;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.mayconr.juoserver.game.packet.*;
+import com.github.mayconr.juoserver.game.packet.RequestWarMode;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageDecoder;
 
 public class UOProtocolDecoder extends ByteToMessageDecoder {
 
@@ -44,7 +46,8 @@ public class UOProtocolDecoder extends ByteToMessageDecoder {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out) throws Exception {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf buf, List<Object> out)
+            throws Exception {
         if (!hasSeed) {
             var seed = new LoginSeedPacket(buf);
             LOGGER.info("Seed received from address {}", seed.getAddress());
@@ -54,7 +57,7 @@ public class UOProtocolDecoder extends ByteToMessageDecoder {
         boolean hasUnknownPacket = false;
         while (buf.readableBytes() > 0 && !hasUnknownPacket) {
             var code = buf.getByte(buf.readerIndex());
-            var hexCode = HexFormat.of().formatHex(new byte[]{code}).toUpperCase();
+            var hexCode = HexFormat.of().formatHex(new byte[] {code}).toUpperCase();
 
             var packetClass = packetsClass.get((int) code);
             if (packetClass != null) {
@@ -62,11 +65,14 @@ public class UOProtocolDecoder extends ByteToMessageDecoder {
                 LOGGER.debug("Packet received [0x{} - {}]", hexCode, packetClass.getSimpleName());
             } else {
                 hasUnknownPacket = true;
-                LOGGER.info("Unknown packet [0x{}] is not possible to decode remaining data.", hexCode);
+                LOGGER.info(
+                        "Unknown packet [0x{}] is not possible to decode remaining data.", hexCode);
 
                 byte[] remainingData = new byte[buf.readableBytes()];
                 buf.readBytes(remainingData);
-                LOGGER.debug("Unknown packet data [{}]", HexFormat.of().formatHex(remainingData).toUpperCase());
+                LOGGER.debug(
+                        "Unknown packet data [{}]",
+                        HexFormat.of().formatHex(remainingData).toUpperCase());
             }
         }
     }

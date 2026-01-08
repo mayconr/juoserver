@@ -11,13 +11,23 @@ public class DefaultEventBus implements EventBus {
     private final Map<Class<?>, List<ConditionalHandler<?>>> listeners = new HashMap<>();
 
     @Override
-    public <T extends GameEvent> void register(Class<T> type, EventHandler<T> listener) {
-        listeners.computeIfAbsent(type, k -> new ArrayList<>()).add(new ConditionalHandler<>(listener, e->true));
+    public <T extends GameEvent> void register(EventRegistry<T> registry) {
+        register(registry.getType(), registry, registry.getPredicate());
     }
 
     @Override
-    public <T extends GameEvent> void register(Class<T> type, EventHandler<T> listener, Predicate<T> predicate) {
-        listeners.computeIfAbsent(type, k -> new ArrayList<>()).add(new ConditionalHandler<>(listener, predicate));
+    public <T extends GameEvent> void register(Class<T> type, EventHandler<T> listener) {
+        listeners
+                .computeIfAbsent(type, k -> new ArrayList<>())
+                .add(new ConditionalHandler<>(listener, e -> true));
+    }
+
+    @Override
+    public <T extends GameEvent> void register(
+            Class<T> type, EventHandler<T> listener, Predicate<T> predicate) {
+        listeners
+                .computeIfAbsent(type, k -> new ArrayList<>())
+                .add(new ConditionalHandler<>(listener, predicate));
     }
 
     @Override
@@ -38,5 +48,5 @@ public class DefaultEventBus implements EventBus {
         return HandlerResult.CONTINUE;
     }
 
-    private record ConditionalHandler<T>(EventHandler<T> eventHandler, Predicate<T> predicate) { }
+    private record ConditionalHandler<T>(EventHandler<T> eventHandler, Predicate<T> predicate) {}
 }

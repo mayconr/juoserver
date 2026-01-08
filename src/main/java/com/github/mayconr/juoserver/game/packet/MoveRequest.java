@@ -2,6 +2,7 @@ package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.core.model.Direction;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 
@@ -23,5 +24,4 @@ public class MoveRequest extends AbstractPacket {
         this.sequence = buf.readByte() & 0xFF;
         this.fastWalkPreventKey = buf.readInt();
     }
-
 }

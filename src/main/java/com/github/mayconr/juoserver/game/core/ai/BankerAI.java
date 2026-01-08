@@ -1,5 +1,8 @@
 package com.github.mayconr.juoserver.game.core.ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.github.mayconr.juoserver.game.core.ai.ollama.OllanaClient;
 import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.core.event.EventBus;
@@ -12,10 +15,8 @@ import com.github.mayconr.juoserver.game.core.model.UOPlayer;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.core.session.npc.NpcSession;
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
-import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BankerAI extends IntervalGameTask implements NpcAI {
@@ -27,16 +28,28 @@ public class BankerAI extends IntervalGameTask implements NpcAI {
     private GameSession gameSession;
     private NpcSession npcSession;
 
-    private static final List<OllanaClient.Message> OLLAMA_CONTEXT = List.of(new OllanaClient.Message("system", "You are a banker in the town of Minoc, in the world of Ultima Online. Your duty is to securely guard the belongings and gold of the citizens. You speak in a polite and medieval manner, like a true NPC. Avoid any mention of the modern world, technology, or artificial intelligence. Only respond based on the universe of Ultima Online, and always be ready to open the bank when the client says \"bank\". You respect Lord British and follow the Virtues of Honor and Honesty."),
-            new OllanaClient.Message("system", "Minoc is known as the city of mining."),
-            new OllanaClient.Message("system", "You are speaking to a man."),
-            new OllanaClient.Message("system", "Ensure your responses in english"),
-            new OllanaClient.Message("system", "do not include accents in the answer"),
-            new OllanaClient.Message("system", "answer with a json in the following: {\"chat\":\"\",\"action\":\"\"} where chat is your answer to the client and action is a command for the server that called you."),
-            new OllanaClient.Message("system", "when you decide to open the bank use the action openClientBank"),
-            new OllanaClient.Message("system", "when you feel you are in dagerous, use the action callThePollice"),
-            new OllanaClient.Message("system", "you never ask for credentials"),
-            new OllanaClient.Message("system", "Always respond with a maximum of 6 tokens. The answer must be short and objective."));
+    private static final List<OllanaClient.Message> OLLAMA_CONTEXT =
+            List.of(
+                    new OllanaClient.Message(
+                            "system",
+                            "You are a banker in the town of Minoc, in the world of Ultima Online. Your duty is to securely guard the belongings and gold of the citizens. You speak in a polite and medieval manner, like a true NPC. Avoid any mention of the modern world, technology, or artificial intelligence. Only respond based on the universe of Ultima Online, and always be ready to open the bank when the client says \"bank\". You respect Lord British and follow the Virtues of Honor and Honesty."),
+                    new OllanaClient.Message("system", "Minoc is known as the city of mining."),
+                    new OllanaClient.Message("system", "You are speaking to a man."),
+                    new OllanaClient.Message("system", "Ensure your responses in english"),
+                    new OllanaClient.Message("system", "do not include accents in the answer"),
+                    new OllanaClient.Message(
+                            "system",
+                            "answer with a json in the following: {\"chat\":\"\",\"action\":\"\"} where chat is your answer to the client and action is a command for the server that called you."),
+                    new OllanaClient.Message(
+                            "system",
+                            "when you decide to open the bank use the action openClientBank"),
+                    new OllanaClient.Message(
+                            "system",
+                            "when you feel you are in dagerous, use the action callThePollice"),
+                    new OllanaClient.Message("system", "you never ask for credentials"),
+                    new OllanaClient.Message(
+                            "system",
+                            "Always respond with a maximum of 6 tokens. The answer must be short and objective."));
 
     public BankerAI(Database database, OllanaClient ollanaClient, EventBus eventBus) {
         super(10);
@@ -49,14 +62,14 @@ public class BankerAI extends IntervalGameTask implements NpcAI {
     public void initialize(GameSession gameSession, NpcSession session) {
         this.gameSession = gameSession;
         this.npcSession = session;
-        //eventBus.register(MobileSpeech.class, this::onMobileSpeech);
-        log.info("AI initialized for NPC "+session.getNpc().getName());
-        //sk-ee998c407c534c54acac93a2858cba2d
+        // eventBus.register(MobileSpeech.class, this::onMobileSpeech);
+        log.info("AI initialized for NPC " + session.getNpc().getName());
+        // sk-ee998c407c534c54acac93a2858cba2d
     }
 
     @Override
     public void execute() {
-        //this.npcSession.move(Direction.NORTH);
+        // this.npcSession.move(Direction.NORTH);
     }
 
     public HandlerResult onMobileSpeech(MobileSpeech speech) {
@@ -78,7 +91,7 @@ public class BankerAI extends IntervalGameTask implements NpcAI {
                 case "move w" -> npcSession.move(Direction.SOUTHWEST);
                 case "move e" -> npcSession.move(Direction.EAST);
             }*/
-            System.out.println(npcSession.getNpc().getX() +" "+npcSession.getNpc().getY());
+            System.out.println(npcSession.getNpc().getX() + " " + npcSession.getNpc().getY());
             npcSession.move(mobile);
         } else {
             final var contextKey = "CHAT_WITH_" + mobile.getSerialId();
@@ -121,16 +134,16 @@ public class BankerAI extends IntervalGameTask implements NpcAI {
             database.getContainerById(serialId)
                     .filter(container -> container instanceof UOContainer)
                     .map(UOContainer.class::cast)
-                    .ifPresent(container -> {
-                        gameSession.moveItem(container, mobile);
-                        playerSession.openContainerInRange(container);
-                    });
+                    .ifPresent(
+                            container -> {
+                                gameSession.moveItem(container, mobile);
+                                playerSession.openContainerInRange(container);
+                            });
         }
     }
 
     private void handleCloseVault(UOPlayer player) {
         final int vaultSerial = player.getAttribute(VAULT_ATTRIBUTE, -1);
-        database.getItemBySerialId(vaultSerial)
-                .ifPresent(gameSession::deleteItem);
+        database.getItemBySerialId(vaultSerial).ifPresent(gameSession::deleteItem);
     }
 }

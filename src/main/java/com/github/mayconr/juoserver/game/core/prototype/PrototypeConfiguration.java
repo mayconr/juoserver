@@ -8,5 +8,4 @@ public class PrototypeConfiguration {
     public PrototypeManager prototype() {
         return new PrototypeManagerImpl();
     }
-
 }

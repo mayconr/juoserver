@@ -1,8 +1,11 @@
 package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
 
+import io.netty.buffer.ByteBuf;
+import lombok.ToString;
+
+@ToString
 public class PingPong extends AbstractPacket {
     public static final int CODE = (byte) 0x73;
     private final int sequence;

@@ -3,6 +3,7 @@ package com.github.mayconr.juoserver.game.core.session.player;
 import com.github.mayconr.juoserver.game.core.database.Database;
 import com.github.mayconr.juoserver.game.core.model.*;
 import com.github.mayconr.juoserver.game.packet.*;
+
 import io.netty.channel.ChannelHandlerContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,8 +35,9 @@ class DoubleClickService {
                 openPaperdoll(serialId);
             }
         } else {
-            final var otherMobile = database.getMobileSerialId(serialId)
-                    .orElseThrow(() -> new MobileNotFoundException(serialId));
+            final var otherMobile =
+                    database.getMobileSerialId(serialId)
+                            .orElseThrow(() -> new MobileNotFoundException(serialId));
             if (otherMobile instanceof UONpc npc) {
                 if (NpcType.MOUNT.equals(npc.getType())) {
                     mountService.handleMount(npc);
@@ -46,8 +48,9 @@ class DoubleClickService {
     }
 
     private void openPaperdoll(int serialId) {
-        final var mobile = database.getMobileSerialId(serialId)
-                .orElseThrow(() -> new MobileNotFoundException(serialId));
+        final var mobile =
+                database.getMobileSerialId(serialId)
+                        .orElseThrow(() -> new MobileNotFoundException(serialId));
 
         if (isHumanNpc(mobile) || mobile instanceof UOPlayer) {
             ctx.writeAndFlush(new OpenPaperdoll(mobile, OpenPaperdoll.Flag.NORMAL));
@@ -59,22 +62,29 @@ class DoubleClickService {
     }
 
     private void handleItemDoubleClick(int serialId) {
-        final var item = database.getItemBySerialId(serialId)
-                .orElseThrow(() -> new ItemNotFoundException(serialId));
+        final var item =
+                database.getItemBySerialId(serialId)
+                        .orElseThrow(() -> new ItemNotFoundException(serialId));
 
         if (item instanceof Container container) {
             ctx.write(new DrawContainer(container));
 
             if (!container.getItemsInContainer().isEmpty()) {
-                ctx.write(new AddMultipleItemsToContainer(container, container.getItemsInContainer()));
+                ctx.write(
+                        new AddMultipleItemsToContainer(
+                                container, container.getItemsInContainer()));
             }
 
             ctx.flush();
         } else {
             player.addItemToContainer(item);
             ctx.writeAndFlush(new AddItemToContainer(player, item));
-            log.info("Item [{}-{}] added to container [{}-{}]", item.getSerialId(), item.getName(), player.getSerialId(), player.getName());
+            log.info(
+                    "Item [{}-{}] added to container [{}-{}]",
+                    item.getSerialId(),
+                    item.getName(),
+                    player.getSerialId(),
+                    player.getName());
         }
     }
-
 }

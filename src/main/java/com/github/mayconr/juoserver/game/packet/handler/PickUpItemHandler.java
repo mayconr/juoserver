@@ -2,6 +2,7 @@ package com.github.mayconr.juoserver.game.packet.handler;
 
 import com.github.mayconr.juoserver.game.core.session.player.PlayerSession;
 import com.github.mayconr.juoserver.game.packet.PickUpItem;
+
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 

@@ -1,6 +1,7 @@
 package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 
 public class GeneralInformation extends AbstractPacket {
@@ -11,12 +12,12 @@ public class GeneralInformation extends AbstractPacket {
     public GeneralInformation(ByteBuf buf) {
         super(CODE, computeLength(buf));
         int commandCode = buf.readShort();
-        subCommand = switch (commandCode) {
-            case 5 -> new ScreenSize(buf);
-            case 12 -> new CloseStatusGump(buf);
-            default -> null;
-        };
-
+        subCommand =
+                switch (commandCode) {
+                    case 5 -> new ScreenSize(buf);
+                    case 12 -> new CloseStatusGump(buf);
+                    default -> null;
+                };
     }
 
     private static int computeLength(ByteBuf buf) {
@@ -28,8 +29,7 @@ public class GeneralInformation extends AbstractPacket {
         return subCommand;
     }
 
-    public interface SubCommand {
-    }
+    public interface SubCommand {}
 
     public static class ScreenSize implements SubCommand {
         private final int x;
@@ -64,9 +64,7 @@ public class GeneralInformation extends AbstractPacket {
 
         @Override
         public String toString() {
-            return "CloseStatusGump{" +
-                    "serialId=" + serialId +
-                    '}';
+            return "CloseStatusGump{" + "serialId=" + serialId + '}';
         }
     }
 }

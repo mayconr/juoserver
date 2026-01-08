@@ -2,6 +2,7 @@ package com.github.mayconr.juoserver.game.packet;
 
 import com.github.mayconr.juoserver.game.core.model.Season;
 import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
 import io.netty.buffer.ByteBuf;
 
 public class SeasonalInformation extends AbstractPacket {

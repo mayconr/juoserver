@@ -26,8 +26,9 @@ public enum TextType {
 
     public static TextType byCode(int code) {
         return Arrays.stream(values())
-                .filter(value->value.code==code)
+                .filter(value -> value.code == code)
                 .findFirst()
-                .orElseThrow(()->new IllegalArgumentException("Invalid TextType for code "+code));
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Invalid TextType for code " + code));
     }
 }

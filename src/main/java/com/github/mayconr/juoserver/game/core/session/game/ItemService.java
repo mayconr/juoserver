@@ -10,6 +10,7 @@ import com.github.mayconr.juoserver.game.core.model.UOItem;
 import com.github.mayconr.juoserver.game.packet.DeleteObject;
 import com.github.mayconr.juoserver.game.packet.ObjectInfo;
 import com.github.mayconr.juoserver.game.packet.ObjectRevision;
+
 import io.netty.channel.group.ChannelGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,13 @@ public class ItemService {
         channelGroup.flush();
         eventBus.publish(new ItemCreated(item));
         if (log.isDebugEnabled())
-            log.debug("Item [{}] created a location [{},{},{}] with serialId [{}]", item, location.getX(), location.getY(), location.getZ(), item.getSerialId());
+            log.debug(
+                    "Item [{}] created a location [{},{},{}] with serialId [{}]",
+                    item,
+                    location.getX(),
+                    location.getY(),
+                    location.getZ(),
+                    item.getSerialId());
     }
 
     public void handleDeleteItem(UOItem item) {

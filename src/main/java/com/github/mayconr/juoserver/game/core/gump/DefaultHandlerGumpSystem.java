@@ -1,27 +1,30 @@
 package com.github.mayconr.juoserver.game.core.gump;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
+
 import com.github.mayconr.juoserver.game.core.model.UOMobile;
 import com.github.mayconr.juoserver.game.core.model.UOPlayer;
 import com.github.mayconr.juoserver.game.packet.GumpSelection;
 import com.github.mayconr.juoserver.game.packet.SendGumpDialog;
 import com.github.mayconr.juoserver.game.packet.handler.AttributeKeys;
+
 import io.netty.channel.Channel;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.util.AttributeKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
-
 @Slf4j
 @RequiredArgsConstructor
 public class DefaultHandlerGumpSystem implements GumpSystem, GumpSystemCallback {
 
-    private static final AttributeKey<Map<Integer, GumpContext>> GUMP_IDS = AttributeKey.valueOf(Map.class.getName());
-    private static final AttributeKey<Long> LAST_GUMP_RESPONSE = AttributeKey.valueOf(Long.class.getName());
+    private static final AttributeKey<Map<Integer, GumpContext>> GUMP_IDS =
+            AttributeKey.valueOf(Map.class.getName());
+    private static final AttributeKey<Long> LAST_GUMP_RESPONSE =
+            AttributeKey.valueOf(Long.class.getName());
     private final ChannelGroup channelGroup;
     private final Random random = new Random();
 
@@ -35,15 +38,24 @@ public class DefaultHandlerGumpSystem implements GumpSystem, GumpSystemCallback 
         gumpUI.render(builder);
         final var built = builder.build();
 
-        channel.writeAndFlush(new SendGumpDialog(mobile, gumpId, 100,100, built.layout, built.texts));
+        channel.writeAndFlush(
+                new SendGumpDialog(mobile, gumpId, 100, 100, built.layout, built.texts));
         log.info("Sent gump {} to player {}", gumpId, mobile.getName());
     }
 
     private Channel getPlayerChannel(UOPlayer player) {
         return channelGroup.stream()
-                .filter(ch -> player.equals(ch.attr(AttributeKeys.PLAYER_SESSION).get().getPlayer()))
+                .filter(
+                        ch ->
+                                player.equals(
+                                        ch.attr(AttributeKeys.PLAYER_SESSION).get().getPlayer()))
                 .findFirst()
-                .orElseThrow(()->new IllegalStateException("Channel not found for mobile ["+ player.getAccountId()+"]"));
+                .orElseThrow(
+                        () ->
+                                new IllegalStateException(
+                                        "Channel not found for mobile ["
+                                                + player.getAccountId()
+                                                + "]"));
     }
 
     private int createGumpId(Channel channel, UOPlayer player, GumpHandler handler) {
@@ -53,14 +65,19 @@ public class DefaultHandlerGumpSystem implements GumpSystem, GumpSystemCallback 
         while (ids.containsKey(gumpId)) {
             gumpId = random.nextInt();
         }
-        ids.put(gumpId, new GumpContext(gumpId, player.getSerialId(), System.currentTimeMillis(), handler));
+        ids.put(
+                gumpId,
+                new GumpContext(gumpId, player, System.currentTimeMillis(), handler));
         attribute.set(ids);
         return gumpId;
     }
 
     @Override
     public void onGumpSelection(Channel channel, GumpSelection gumpSelection) {
-        log.debug("Response received for GumpId {} on channel {}", gumpSelection.getGumpId(), channel);
+        log.debug(
+                "Response received for GumpId {} on channel {}",
+                gumpSelection.getGumpId(),
+                channel);
 
         var map = channel.attr(GUMP_IDS).get();
         if (map == null) {
@@ -69,7 +86,7 @@ public class DefaultHandlerGumpSystem implements GumpSystem, GumpSystemCallback 
         }
         final var context = map.remove(gumpSelection.getGumpId());
 
-        if (context.ownerSerial() != gumpSelection.getSerialId()) {
+        if (context.player().getSerialId() != gumpSelection.getSerialId()) {
             log.warn("Gump Aborted: Gump spoofing attempt for channel {}", channel);
             return;
         }
@@ -103,10 +120,10 @@ public class DefaultHandlerGumpSystem implements GumpSystem, GumpSystemCallback 
 
         final var handler = context.handler();
         if (handler == null) {
-            log.warn("Replay or invalid gump {} for channel {}", gumpSelection.getGumpId(), channel);
+            log.warn(
+                    "Replay or invalid gump {} for channel {}", gumpSelection.getGumpId(), channel);
             return;
         }
         handler.handle(context, gumpSelection);
     }
-
 }

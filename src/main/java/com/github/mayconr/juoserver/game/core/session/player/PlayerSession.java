@@ -1,10 +1,10 @@
 package com.github.mayconr.juoserver.game.core.session.player;
 
+import java.util.List;
+
 import com.github.mayconr.juoserver.game.core.model.*;
 import com.github.mayconr.juoserver.game.core.session.game.GameSession;
 import com.github.mayconr.juoserver.game.packet.*;
-
-import java.util.List;
 
 public interface PlayerSession {
 
@@ -45,5 +45,4 @@ public interface PlayerSession {
     void mount(String mount);
 
     void unmount();
-
 }

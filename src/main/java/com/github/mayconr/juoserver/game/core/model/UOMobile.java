@@ -1,14 +1,15 @@
 package com.github.mayconr.juoserver.game.core.model;
 
-import com.github.mayconr.juoserver.game.core.prototype.NpcPrototype;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import com.github.mayconr.juoserver.game.core.prototype.NpcPrototype;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -81,8 +82,19 @@ public class UOMobile extends UOObject implements Container {
     private UOContainer backpack;
     private Map<Layer, UOItem> equippedItems = new HashMap<>();
 
-    public UOMobile(int serialId, int modelId, int x, int y, int z, String name, Direction direction, int hue,
-                    CharacterStatus status, Notoriety notoriety, Race race, Gender gender) {
+    public UOMobile(
+            int serialId,
+            int modelId,
+            int x,
+            int y,
+            int z,
+            String name,
+            Direction direction,
+            int hue,
+            CharacterStatus status,
+            Notoriety notoriety,
+            Race race,
+            Gender gender) {
         super(serialId, modelId, x, y, z, name);
         this.direction = direction;
         this.hue = hue;
@@ -92,8 +104,12 @@ public class UOMobile extends UOObject implements Container {
         this.gender = gender;
     }
 
-    public UOMobile(int serialId, Location location, Direction direction, CharacterStatus status,
-                    NpcPrototype prototype) {
+    public UOMobile(
+            int serialId,
+            Location location,
+            Direction direction,
+            CharacterStatus status,
+            NpcPrototype prototype) {
         super(serialId, prototype.getModelId(), location, prototype.getName());
         this.direction = direction;
         this.hue = prototype.getHue();
@@ -134,7 +150,7 @@ public class UOMobile extends UOObject implements Container {
     @Override
     public void addItemToContainer(UOItem item) {
         if (backpack == null) {
-            throw new IllegalStateException("Backpack does not exist for mobile "+getName());
+            throw new IllegalStateException("Backpack does not exist for mobile " + getName());
         }
         item.setContainer(backpack);
         backpack.addItemToContainer(item);

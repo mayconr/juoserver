@@ -1,14 +1,15 @@
 package com.github.mayconr.juoserver.game.packet;
 
-import com.github.mayconr.juoserver.game.core.model.UOMobile;
-import com.github.mayconr.juoserver.game.server.AbstractPacket;
-import io.netty.buffer.ByteBuf;
-import io.netty.util.CharsetUtil;
-
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
+
+import com.github.mayconr.juoserver.game.core.model.UOMobile;
+import com.github.mayconr.juoserver.game.server.AbstractPacket;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.util.CharsetUtil;
 
 public class SendGumpDialog extends AbstractPacket {
 
@@ -17,10 +18,13 @@ public class SendGumpDialog extends AbstractPacket {
     private final int gumpId;
     private final int x;
     private final int y;
-    private final String layout;        // ex: "page 0\nresizepic 0 0 5054 200 150\nbutton 20 20 4005 4007 1 0 1\ntext 50 50 0 0"
-    private final List<String> texts;   // textos referenciados pelo layout (indices 0..N-1)
+    private final String
+            layout; // ex: "page 0\nresizepic 0 0 5054 200 150\nbutton 20 20 4005 4007 1 0 1\ntext
+    // 50 50 0 0"
+    private final List<String> texts; // textos referenciados pelo layout (indices 0..N-1)
 
-    public SendGumpDialog(UOMobile mobile, int gumpId, int x, int y, String layout, List<String> texts) {
+    public SendGumpDialog(
+            UOMobile mobile, int gumpId, int x, int y, String layout, List<String> texts) {
         super(CODE, computeLength(Objects.requireNonNull(layout), Objects.requireNonNull(texts)));
         this.mobile = Objects.requireNonNull(mobile);
         this.gumpId = gumpId;
@@ -30,9 +34,7 @@ public class SendGumpDialog extends AbstractPacket {
         this.texts = Objects.requireNonNull(texts);
     }
 
-    /**
-     * Calcula o tamanho total do pacote (incluindo opcode e length).
-     */
+    /** Calcula o tamanho total do pacote (incluindo opcode e length). */
     private static int computeLength(String layout, List<String> texts) {
         Objects.requireNonNull(layout);
         Objects.requireNonNull(texts);

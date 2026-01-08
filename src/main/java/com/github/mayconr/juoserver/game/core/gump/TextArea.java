@@ -22,19 +22,16 @@ class TextArea implements UIElement, Sized {
     @Override
     public void render(GumpBuilder g) {
         g.resizePic(x, y, 3000, width, height);
-        g.textEntry(
-                x + 4, y + 4,
-                width - 8, height - 8,
-                0,
-                entryId,
-                -1
-        );
+        g.textEntry(x + 4, y + 4, width - 8, height - 8, 0, entryId, -1);
     }
 
     @Override
-    public int getWidth() { return width; }
+    public int getWidth() {
+        return width;
+    }
 
     @Override
-    public int getHeight() { return height; }
+    public int getHeight() {
+        return height;
+    }
 }
-
